@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { DragSource, Inventory, InventoryType, Slot, SlotWithItem } from '../../typings';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { DragSource, ICategory, Inventory, InventoryType, Slot, SlotWithItem } from '../../typings';
 import { useDrag, useDragDropManager, useDrop } from 'react-dnd';
 import { useAppDispatch } from '../../store';
 import WeightBar from '../utils/WeightBar';
@@ -21,10 +21,12 @@ interface SlotProps {
   inventoryType: Inventory['type'];
   inventoryGroups: Inventory['groups'];
   item: Slot;
+  selectedCategory?: ICategory;
+  searching?: string;
 }
 
 const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> = (
-  { item, inventoryId, inventoryType, inventoryGroups },
+  { item, inventoryId, inventoryType, inventoryGroups, selectedCategory, searching },
   ref
 ) => {
   const [hovering, setHovering] = useState(false);
@@ -119,6 +121,34 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   };
 
   const refs = useMergeRefs([connectRef, ref]);
+  const shouldRenderItem = useMemo(() => {
+    if (!item.name) return false;
+    if (searching) {
+      if (!item.name.toLowerCase().includes(searching.toLowerCase())) return false;
+    }
+    if (!selectedCategory) return true;
+    if (selectedCategory === 'all') return true;
+    switch (selectedCategory) {
+      case 'weapon': {
+        return item.name.toLowerCase().includes('weapon');
+      }
+      case 'food': {
+        return item.name.toLowerCase().includes('food');
+      }
+      case 'material': {
+        return item.name.toLowerCase().includes('material');
+      }
+      case 'clothing': {
+        const lowerName = item.name.toLowerCase();
+        return (
+          lowerName.includes('male_component') ||
+          lowerName.includes('female_component') ||
+          lowerName.includes('male_prop') ||
+          lowerName.includes('female_prop')
+        );
+      }
+    }
+  }, [item.name, selectedCategory, Items, searching]);
 
   return (
     <div
@@ -154,14 +184,14 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
         <div
           className="absolute w-full h-full"
           style={{
-            backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
+            backgroundImage: `url(${shouldRenderItem && item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
             backgroundRepeat: 'no-repeat',
             backgroundSize: '6vh',
             backgroundPosition: 'center',
           }}
         ></div>
       }
-      {isSlotWithItem(item) && (
+      {isSlotWithItem(item) && shouldRenderItem && (
         <div
           className="item-slot-wrapper relative "
           onMouseEnter={() => {
@@ -183,8 +213,10 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
               inventoryType === 'player' && item.slot <= 5 ? 'item-hotslot-header-wrapper' : 'item-slot-header-wrapper'
             }
           >
-            {inventoryType === 'player' && item.slot <= 5 && <div className="inventory-slot-number">{item.slot}</div>}
-            <div className="item-slot-info-wrapper">
+            {inventoryType === 'player' && item.slot <= 5 && (
+              <div className="inventory-slot-number rounded-br-lg">{item.slot}</div>
+            )}
+            <div className="item-slot-info-wrapper ">
               <p>{item.count}</p>
             </div>
           </div>

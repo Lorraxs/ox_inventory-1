@@ -7,7 +7,7 @@ $mainColor: #22232c;
 $textColor: #c1c2c5;
 $mainFont: Oswald;
 
-$secondaryColor: rgba(119, 119, 119, 0.4);
+$secondaryColor: rgba(119, 119, 119, 0.2);
 $secondaryColorHighlight: #33343f;
 $secondaryColorLight: rgba(0, 0, 0, 0.5);
 $secondaryColorDark: rgba(12, 12, 12, 0.8);
@@ -19,7 +19,7 @@ $gridGap: 10px;
 $containerSize: calc(#{$gridRows} * #{$gridSize + 0.22vh} + #{$gridRows} * #{$gridGap});
 
 .inventory-header {
-  width: calc($gridSize * $gridCols + $gridGap * ($gridCols - 1));
+  width: calc($gridSize * $gridCols + $gridGap * ($gridCols - 1) + 10px);
 }
 
 :root {
@@ -47,6 +47,19 @@ code {
 }
 
 ::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f157;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.733);
+  border-radius: 5px;
+}
+
+.item-notification-container::-webkit-scrollbar {
   display: none;
 }
 
@@ -285,7 +298,15 @@ button:active {
 .inventory-grid-wrapper {
   display: flex;
   flex-direction: column;
-  gap: calc($gridGap * 2);
+  gap: calc($gridGap * 1);
+}
+.filter-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: $gridGap;
+}
+.filter-btn {
+  width: $gridSize;
 }
 .inventory-grid-header-wrapper {
   display: flex;
@@ -347,18 +368,18 @@ button:active {
 
 .inventory-slot-number {
   background-color: white;
-  color: black;
-  height: 16px;
-  width: 16px;
-  border-top-left-radius: 0.25vh;
-  border-bottom-right-radius: 0.25vh;
+  color: #1f1f1f;
+  height: 22px;
+  width: 22px;
+  /* border-top-left-radius: 0.25vh;
+  border-bottom-right-radius: 0.25vh; */
   padding: 3px;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: 600;
+  font-weight: 400;
   font-family: $mainFont;
 }
 

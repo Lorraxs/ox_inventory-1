@@ -3,7 +3,7 @@ import React from 'react';
 
 function NIcon() {
   return (
-    <Box rWidth={50} rHeight={50} className="flex justify-center items-center">
+    <Box rWidth={40} rHeight={40} className="flex justify-center items-center">
       <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#clip0_7_28)">
           <path

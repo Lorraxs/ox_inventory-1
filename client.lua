@@ -161,7 +161,7 @@ local function onOpenInventory()
 				255,
 				255,
 				255,
-				200
+				100
 			)
 		end
 	end)

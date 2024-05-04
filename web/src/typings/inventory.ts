@@ -78,3 +78,7 @@ export type IClothingInventory = {
   slots: 12;
   items: Slot[];
 };
+
+export const Categories = ['all', 'weapon', 'food', 'material', 'clothing'] as const;
+
+export type ICategory = typeof Categories[number];
