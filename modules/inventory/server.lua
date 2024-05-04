@@ -1,4 +1,5 @@
 if not lib then return end
+local clothes = lib.load('data.clothes')
 
 local Inventory = {}
 
@@ -60,6 +61,7 @@ end
 ---@param slots updateSlot[]
 ---@param syncOwner? boolean
 function OxInventory:syncSlotsWithClients(slots, syncOwner)
+	print("OxInventory:syncSlotsWithClients", self.type)
 	for playerId in pairs(self.openedBy) do
 		if self.id ~= playerId then
             local target = Inventories[playerId]
@@ -72,6 +74,9 @@ function OxInventory:syncSlotsWithClients(slots, syncOwner)
 
 	if syncOwner and self.player then
 		TriggerClientEvent('ox_inventory:updateSlots', self.id, slots, self.weight)
+	end
+	if self.type == 'clothing' then 
+		TriggerClientEvent('ox_inventory:updateSlots', self.source, slots, self.weight)
 	end
 end
 
@@ -97,6 +102,7 @@ local GetVehicleNumberPlateText = GetVehicleNumberPlateText
 ---@param player table
 ---@return OxInventory | false | nil
 local function loadInventoryData(data, player)
+	print(data, player)
 	local source = source
 	local inventory
 
@@ -206,13 +212,34 @@ local function loadInventoryData(data, player)
 	return inventory or false
 end
 
+function copynof(orig)
+	local orig_type = type(orig)
+	local copy
+	if orig_type == 'table' then
+			copy = {}
+			for orig_key, orig_value in next, orig, nil do
+					copy[copynof(orig_key)] = copynof(orig_value)
+			end
+			
+	else -- number, string, boolean, etc
+			if orig_type ~= 'function' then
+					copy = orig
+			end
+	end
+	return copy
+end
+
 setmetatable(Inventory, {
 	__call = function(self, inv, player)
+		print(json.encode(copynof(inv)))
 		if not inv then
 			return self
 		elseif type(inv) == 'table' then
-			if inv.__index then return inv end
-
+			if inv.__index then 
+				print("has __index")
+				return inv
+			end
+			print("loading inventory data")
 			return not inv.owner and Inventories[inv.id] or loadInventoryData(inv, player)
 		end
 
@@ -555,6 +582,7 @@ end, true)
 --- This should only be utilised internally!
 --- To create a stash, please use `exports.ox_inventory:RegisterStash` instead.
 function Inventory.Create(id, label, invType, slots, weight, maxWeight, owner, items, groups, dbId)
+	print("Inventory.Create", id, label, invType, slots, weight, maxWeight, owner,  groups, dbId)
 	if invType == 'player' and hasActiveInventory(id, owner) then return end
 
 	local self = {
@@ -573,25 +601,35 @@ function Inventory.Create(id, label, invType, slots, weight, maxWeight, owner, i
 		time = os.time(),
 		groups = groups,
 		openedBy = {},
-        dbId = dbId
+		dbId = dbId,
+		clothing = nil,
 	}
+
+	if invType == 'player' then 
+		self.clothing = Inventory.Create(id, label.."'s clothing", 'clothing', 12, 0, 999999, owner, false, false, "clothing_"..owner)
+	end
 
 	if invType == 'drop' or invType == 'temp' or invType == 'dumpster' then
 		self.datastore = true
 	else
 		self.changed = false
 
-		if invType ~= 'glovebox' and invType ~= 'trunk' then
+		if invType ~= 'glovebox' and invType ~= 'trunk' and invType ~= 'clothing' then
 			self.dbId = id
 
 			if invType ~= 'player' and owner and type(owner) ~= 'boolean' then
 				self.id = ('%s:%s'):format(self.id, owner)
 			end
 		end
+		if invType == 'clothing' then 
+			self.source = self.id
+			self.id = ('clothing_%s'):format(self.id)
+		end
 	end
 
 	if not items then
 		self.items, self.weight = Inventory.Load(self.dbId, invType, owner)
+		print('Inventory.Create items', json.encode(self.items))
 	elseif weight == 0 and next(items) then
 		self.weight = Inventory.CalculateWeight(items)
 	end
@@ -832,6 +870,7 @@ function Inventory.Load(id, invType, owner)
 				v.metadata = Items.CheckMetadata(v.metadata or {}, item, v.name, ostime)
 				local slotWeight = Inventory.SlotWeight(item, v)
 				weight += slotWeight
+				--[[ table.insert(returnData, v.slot, {name = item.name, label = item.label, weight = slotWeight, slot = v.slot, count = v.count, description = item.description, metadata = v.metadata, stack = item.stack, close = item.close}) ]]
 				returnData[v.slot] = {name = item.name, label = item.label, weight = slotWeight, slot = v.slot, count = v.count, description = item.description, metadata = v.metadata, stack = item.stack, close = item.close}
 			end
 		end
@@ -1611,8 +1650,8 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
 
 	if not playerInventory then return end
 
-	local toInventory = (data.toType == 'player' and playerInventory) or Inventory(playerInventory.open)
-	local fromInventory = (data.fromType == 'player' and playerInventory) or Inventory(playerInventory.open)
+	local toInventory = (data.toType == 'player' and playerInventory) or (data.toType == "clothing" and playerInventory.clothing) or Inventory(playerInventory.open)
+	local fromInventory = (data.fromType == 'player' and playerInventory) or (data.fromType == "clothing" and playerInventory.clothing) or Inventory(playerInventory.open)
 
 	if not fromInventory or not toInventory then
 		playerInventory:closeInventory()
@@ -1674,17 +1713,26 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
 			}
 		end
 
-        if data.count > fromData.count then
-            data.count = fromData.count
-        end
+		if data.count > fromData.count then
+			data.count = fromData.count
+		end
 
-        if data.toType == 'newdrop' then
-            return dropItem(source, playerInventory, fromData, data)
-        end
+		if data.toType == 'newdrop' then
+			return dropItem(source, playerInventory, fromData, data)
+		end
+
+		if data.toType == "clothing" then 
+			local itemData = clothes[fromData.name]
+			if not itemData then return end
+			if data.toSlot ~= itemData.c then return end
+			print(json.encode(itemData))
+		end
 
 		if fromData then
-            if fromData.metadata.container and toInventory.type == 'container' then return false end
-            if toData and toData.metadata.container and fromInventory.type == 'container' then return false end
+			if fromData.metadata.container and toInventory.type == 'container' then return false end
+			if toData and toData.metadata.container and fromInventory.type == 'container' then 
+				return false 
+			end
 
 			local container, containerItem = (not sameInventory and playerInventory.containerSlot) and (fromInventory.type == 'container' and fromInventory or toInventory)
 
@@ -1890,14 +1938,14 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
                     toInventory:syncSlotsWithClients({
                         {
                             item = toInventory.items[data.toSlot] or { slot = data.toSlot },
-                            inventory = toInventory.id
+                            inventory = toInventory.type == 'clothing' and 'clothing' or  toInventory.id
                         }
                     }, true)
 
                     fromInventory:syncSlotsWithClients({
                         {
                             item = fromInventory.items[data.fromSlot] or { slot = data.fromSlot },
-                            inventory = fromInventory.id
+                            inventory = fromInventory.type == 'clothing' and 'clothing' or fromInventory.id
                         }
                     }, true)
                 end

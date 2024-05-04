@@ -8,9 +8,9 @@ local ItemList = {}
 local isServer = IsDuplicityVersion()
 
 local function setImagePath(path)
-    if path then
-        return path:match('^[%w]+://') and path or ('%s/%s'):format(client.imagepath, path)
-    end
+	if path then
+		return path:match('^[%w]+://') and path or ('%s/%s'):format(client.imagepath, path)
+	end
 end
 
 ---@param data OxItem
@@ -34,8 +34,8 @@ local function newItem(data)
 	end
 
 	if isServer then
-        ---@cast data OxServerItem
-        serverData = data.server
+		---@cast data OxServerItem
+		serverData = data.server
 		data.client = nil
 
 		if not data.durability then
@@ -44,32 +44,32 @@ local function newItem(data)
 			end
 		end
 
-        if not serverData then goto continue end
+		if not serverData then goto continue end
 
-        if serverData.export then
-            data.cb = useExport(string.strsplit('.', serverData.export))
-        end
+		if serverData.export then
+			data.cb = useExport(string.strsplit('.', serverData.export))
+		end
 	else
-        ---@cast data OxClientItem
-        clientData = data.client
+		---@cast data OxClientItem
+		clientData = data.client
 		data.server = nil
 		data.count = 0
 
-        if not clientData then goto continue end
+		if not clientData then goto continue end
 
-        if clientData.export then
-            data.export = useExport(string.strsplit('.', clientData.export))
-        end
+		if clientData.export then
+			data.export = useExport(string.strsplit('.', clientData.export))
+		end
 
-        clientData.image = setImagePath(clientData.image)
+		clientData.image = setImagePath(clientData.image)
 
-        if clientData.propTwo then
-            clientData.prop = clientData.prop and { clientData.prop, clientData.propTwo } or clientData.propTwo
-            clientData.propTwo = nil
-        end
+		if clientData.propTwo then
+			clientData.prop = clientData.prop and { clientData.prop, clientData.propTwo } or clientData.propTwo
+			clientData.propTwo = nil
+		end
 	end
 
-    ::continue::
+	::continue::
 	ItemList[data.name] = data
 end
 
@@ -77,7 +77,7 @@ for type, data in pairs(lib.load('data.weapons')) do
 	for k, v in pairs(data) do
 		v.name = k
 		v.close = type == 'Ammo' and true or false
-        v.weight = v.weight or 0
+		v.weight = v.weight or 0
 
 		if type == 'Weapons' then
 			---@cast v OxWeapon
@@ -92,13 +92,15 @@ for type, data in pairs(lib.load('data.weapons')) do
 
 		v[type == 'Ammo' and 'ammo' or type == 'Components' and 'component' or type == 'Tints' and 'tint' or 'weapon'] = true
 
-		if isServer then v.client = nil else
+		if isServer then
+			v.client = nil
+		else
 			v.count = 0
 			v.server = nil
 			local clientData = v.client
 
 			if clientData?.image then
-                clientData.image = setImagePath(clientData.image)
+				clientData.image = setImagePath(clientData.image)
 			end
 		end
 
@@ -106,13 +108,34 @@ for type, data in pairs(lib.load('data.weapons')) do
 	end
 end
 
+for k, v in pairs(lib.load('data.clothes')) do
+	local data = {}
+	data.name = k
+	data.label = v.label or k
+	data.description = ("%s %s %s"):format(v.c, v.d, v.t)
+	data.weight = v.weight or 100
+	data.clothing = true
+	data.stack = false
+	data.type = v.type
+	data.component = v.c
+	data.drawable = v.d
+	data.texture = v.t
+	data.image = ("https://supabase.lorraxs.dev/storage/v1/object/public/%s/%s.png"):format("items", k)
+	if isServer then
+
+	else
+		data.count = 0
+	end
+	ItemList[k] = data
+end
+
 for k, v in pairs(lib.load('data.items')) do
 	v.name = k
 	local success, response = pcall(newItem, v)
 
-    if not success then
-        warn(('An error occurred while creating item "%s" callback!\n^1SCRIPT ERROR: %s^0'):format(k, response))
-    end
+	if not success then
+		warn(('An error occurred while creating item "%s" callback!\n^1SCRIPT ERROR: %s^0'):format(k, response))
+	end
 end
 
 ItemList.cash = ItemList.money

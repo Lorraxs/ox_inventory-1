@@ -7,7 +7,7 @@ import {
   stackSlotsReducer,
   swapSlotsReducer,
 } from '../reducers';
-import { State } from '../typings';
+import { InventoryType, State } from '../typings';
 
 const initialState: State = {
   leftInventory: {
@@ -28,6 +28,27 @@ const initialState: State = {
   itemAmount: 0,
   shiftPressed: false,
   isBusy: false,
+  showClothing: false,
+  clothing: {
+    id: 'clothing',
+    type: InventoryType.CLOTHING,
+    slots: 12,
+    items: [
+      { name: '', slot: 1 },
+      { name: '', slot: 2 },
+      { name: '', slot: 3 },
+      { name: '', slot: 4 },
+      { name: '', slot: 5 },
+      { name: '', slot: 6 },
+      { name: '', slot: 7 },
+      { name: '', slot: 8 },
+      { name: '', slot: 9 },
+      { name: '', slot: 10 },
+      { name: '', slot: 11 },
+      { name: '', slot: 12 },
+    ],
+  },
+  takeingAsset: false,
 };
 
 export const inventorySlice = createSlice({
@@ -62,6 +83,12 @@ export const inventorySlice = createSlice({
 
       container.weight = action.payload;
     },
+    setShowClothing: (state, action: PayloadAction<boolean>) => {
+      state.showClothing = action.payload;
+    },
+    setTakingAsset: (state, action: PayloadAction<boolean>) => {
+      state.takeingAsset = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(isPending, (state) => {
@@ -70,6 +97,7 @@ export const inventorySlice = createSlice({
       state.history = {
         leftInventory: current(state.leftInventory),
         rightInventory: current(state.rightInventory),
+        clothing: current(state.clothing),
       };
     });
     builder.addMatcher(isFulfilled, (state) => {
@@ -79,6 +107,7 @@ export const inventorySlice = createSlice({
       if (state.history && state.history.leftInventory && state.history.rightInventory) {
         state.leftInventory = state.history.leftInventory;
         state.rightInventory = state.history.rightInventory;
+        state.clothing = state.history.clothing;
       }
       state.isBusy = false;
     });
@@ -95,10 +124,15 @@ export const {
   stackSlots,
   refreshSlots,
   setContainerWeight,
+  setShowClothing,
+  setTakingAsset,
 } = inventorySlice.actions;
 export const selectLeftInventory = (state: RootState) => state.inventory.leftInventory;
 export const selectRightInventory = (state: RootState) => state.inventory.rightInventory;
 export const selectItemAmount = (state: RootState) => state.inventory.itemAmount;
 export const selectIsBusy = (state: RootState) => state.inventory.isBusy;
+export const selectShowClothing = (state: RootState) => state.inventory.showClothing;
+export const selectClothing = (state: RootState) => state.inventory.clothing;
+export const selectTakingAsset = (state: RootState) => state.inventory.takeingAsset;
 
 export default inventorySlice.reducer;

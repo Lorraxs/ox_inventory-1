@@ -5,10 +5,16 @@ import InventorySlot from './InventorySlot';
 import { getTotalWeight } from '../../helpers';
 import { useAppSelector } from '../../store';
 import { useIntersection } from '../../hooks/useIntersection';
+import NIcon from '../utils/NIcon';
+import { Input } from '@nextui-org/react';
+import { Text } from 'lr-components';
 
 const PAGE_SIZE = 30;
 
-const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
+const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean }> = ({
+  inventory,
+  playerInventory,
+}) => {
   const weight = useMemo(
     () => (inventory.maxWeight !== undefined ? Math.floor(getTotalWeight(inventory.items) * 1000) / 1000 : 0),
     [inventory.maxWeight, inventory.items]
@@ -25,18 +31,38 @@ const InventoryGrid: React.FC<{ inventory: Inventory }> = ({ inventory }) => {
   }, [entry]);
   return (
     <>
-      <div className="inventory-grid-wrapper" style={{ pointerEvents: isBusy ? 'none' : 'auto' }}>
-        <div>
-          <div className="inventory-grid-header-wrapper">
-            <p>{inventory.label}</p>
+      <div className="inventory-grid-wrapper w-1/3 items-center" style={{ pointerEvents: isBusy ? 'none' : 'auto' }}>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <NIcon />
+            <Text fontWeight={'bold'} className="text-lg uppercase" color="#FF8932" textShadow="0 0 40px #FF8932">
+              {inventory.label}
+            </Text>
+          </div>
+          <div className="flex items-center gap-2">
             {inventory.maxWeight && (
-              <p>
-                {weight / 1000}/{inventory.maxWeight / 1000}kg
-              </p>
+              <Text textWrap="nowrap">
+                <span>{weight / 1000}</span> /{' '}
+                <span className="font-bold text-lg text-nowrap">{inventory.maxWeight / 1000} Kg</span>
+              </Text>
+            )}
+            {playerInventory && (
+              <Input
+                type="text"
+                label="Tìm kiếm"
+                size="sm"
+                variant="flat"
+                classNames={{
+                  inputWrapper: 'bg-opacity-30',
+                }}
+                endContent={<i className="icon icon-search"></i>}
+              />
             )}
           </div>
-          <WeightBar percent={inventory.maxWeight ? (weight / inventory.maxWeight) * 100 : 0} />
         </div>
+        {/* <div>
+          <WeightBar percent={inventory.maxWeight ? (weight / inventory.maxWeight) * 100 : 0} />
+        </div> */}
         <div className="inventory-grid-container" ref={containerRef}>
           <>
             {inventory.items.slice(0, (page + 1) * PAGE_SIZE).map((item, index) => (

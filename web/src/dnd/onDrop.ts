@@ -9,8 +9,10 @@ export const onDrop = (source: DragSource, target?: DropTarget) => {
   const { inventory: state } = store.getState();
 
   const { sourceInventory, targetInventory } = getTargetInventory(state, source.inventory, target?.inventory);
-
-  const sourceSlot = sourceInventory.items[source.item.slot - 1] as SlotWithItem;
+  const sourceSlot =
+    sourceInventory.type !== InventoryType.CLOTHING
+      ? (sourceInventory.items[source.item.slot - 1] as SlotWithItem)
+      : (sourceInventory.items[source.item.slot] as SlotWithItem);
 
   const sourceData = Items[sourceSlot.name];
 

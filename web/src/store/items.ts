@@ -19,4 +19,20 @@ export const Items: {
     usable: false,
     count: 0,
   },
+  lockpick: {
+    name: 'lockpick',
+    close: false,
+    label: 'LOCKPICK',
+    stack: false,
+    usable: true,
+    count: 0,
+  },
+  backwoods: {
+    name: 'backwoods',
+    close: false,
+    label: 'RUSSIAN CREAM',
+    stack: false,
+    usable: true,
+    count: 0,
+  },
 };

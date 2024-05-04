@@ -3,21 +3,25 @@ import useNuiEvent from './hooks/useNuiEvent';
 import { Items } from './store/items';
 import { Locale } from './store/locale';
 import { setImagePath } from './store/imagepath';
-import { setupInventory } from './store/inventory';
+import { selectTakingAsset, setupInventory } from './store/inventory';
 import { Inventory } from './typings';
-import { useAppDispatch } from './store';
+import { useAppDispatch, useAppSelector } from './store';
 import { debugData } from './utils/debugData';
 import DragPreview from './components/utils/DragPreview';
 import { fetchNui } from './utils/fetchNui';
 import { useDragDropManager } from 'react-dnd';
 import KeyPress from './components/utils/KeyPress';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import { Text } from 'lr-components';
+import Loading from './components/utils/Loading';
 
 debugData([
   {
     action: 'setupInventory',
     data: {
       leftInventory: {
-        id: 'test',
+        id: 'playerinventory',
         type: 'player',
         slots: 50,
         label: 'Bob Smith',
@@ -25,19 +29,15 @@ debugData([
         maxWeight: 5000,
         items: [
           {
+            name: 'male_component_11_100_1',
             slot: 1,
-            name: 'iron',
-            weight: 3000,
-            metadata: {
-              description: `name: Svetozar Miletic  \n Gender: Male`,
-              ammo: 3,
-              mustard: '60%',
-              ketchup: '30%',
-              mayo: '10%',
-            },
-            count: 5,
+            weight: 100,
+            stack: false,
+            count: 1,
+            metadata: [],
+            description: '11 100 1',
+            label: 'Áo',
           },
-          { slot: 2, name: 'powersaw', weight: 0, count: 1, metadata: { durability: 75 } },
           { slot: 3, name: 'copper', weight: 100, count: 12, metadata: { type: 'Special' } },
           {
             slot: 4,
@@ -46,7 +46,7 @@ debugData([
             count: 1,
             metadata: { description: 'Generic item description' },
           },
-          { slot: 5, name: 'water', weight: 100, count: 1 },
+          { slot: 5, name: 'water', weight: 100, count: 22 },
           {
             slot: 6,
             name: 'backwoods',
@@ -83,6 +83,22 @@ debugData([
           },
         ],
       },
+      clothingItems: [
+        {
+          slot: 4,
+          name: 'male_component_11_100_1',
+          weight: 500,
+          price: 300,
+          ingredients: {
+            iron: 5,
+            copper: 12,
+            powersaw: 0.1,
+          },
+          metadata: {
+            description: 'Simple lockpick that breaks easily and can pick basic door locks',
+          },
+        },
+      ],
     },
   },
 ]);
@@ -90,7 +106,7 @@ debugData([
 const App: React.FC = () => {
   const dispatch = useAppDispatch();
   const manager = useDragDropManager();
-
+  const takeingAsset = useAppSelector(selectTakingAsset);
   useNuiEvent<{
     locale: { [key: string]: string };
     items: typeof Items;
@@ -109,18 +125,31 @@ const App: React.FC = () => {
   useNuiEvent('closeInventory', () => {
     manager.dispatch({ type: 'dnd-core/END_DRAG' });
   });
-
+  console.log(takeingAsset);
   return (
-    <div className="app-wrapper">
+    <div className="app-wrapper dark">
       <InventoryComponent />
       <DragPreview />
       <KeyPress />
+      {takeingAsset && (
+        <div
+          className="w-full h-full flex items-center justify-center flex-col absolute top-0 left-0 z-50 bg-black bg-opacity-50"
+          style={{
+            backgroundImage: 'url("https://supabase.lorraxs.dev/storage/v1/object/public/assets/taking-asset-bg.png")',
+          }}
+        >
+          <Loading />
+          <Text rFontSize={35} fontFamily="Goldman">
+            ĐANG CHỤP HÌNH ...
+          </Text>
+        </div>
+      )}
     </div>
   );
 };
 
-addEventListener("dragstart", function(event) {
-  event.preventDefault()
-})
+addEventListener('dragstart', function (event) {
+  event.preventDefault();
+});
 
 export default App;

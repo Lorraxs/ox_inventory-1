@@ -22,7 +22,9 @@ export const refreshSlotsReducer: CaseReducer<State, PayloadAction<Payload>> = (
       .filter((data) => !!data)
       .forEach((data) => {
         const targetInventory = data.inventory
-          ? data.inventory !== InventoryType.PLAYER
+          ? data.inventory === InventoryType.CLOTHING
+            ? state.clothing
+            : data.inventory !== InventoryType.PLAYER
             ? state.rightInventory
             : state.leftInventory
           : state.leftInventory;

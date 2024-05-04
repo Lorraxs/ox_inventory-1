@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import useNuiEvent from '../../hooks/useNuiEvent';
 import InventoryControl from './InventoryControl';
 import InventoryHotbar from './InventoryHotbar';
-import { useAppDispatch } from '../../store';
-import { refreshSlots, setAdditionalMetadata, setupInventory } from '../../store/inventory';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { refreshSlots, selectShowClothing, setAdditionalMetadata, setupInventory } from '../../store/inventory';
 import { useExitListener } from '../../hooks/useExitListener';
 import type { Inventory as InventoryProps } from '../../typings';
 import RightInventory from './RightInventory';
@@ -13,9 +13,14 @@ import { closeTooltip } from '../../store/tooltip';
 import InventoryContext from './InventoryContext';
 import { closeContextMenu } from '../../store/contextMenu';
 import Fade from '../utils/transitions/Fade';
+import Header from '../Header';
+import Footer from '../Footer';
+import Clothing from './Clothing';
 
 const Inventory: React.FC = () => {
   const [inventoryVisible, setInventoryVisible] = useState(false);
+  const [infoVisible, setInfoVisible] = useState(false);
+  const showClothing = useAppSelector(selectShowClothing);
   const dispatch = useAppDispatch();
 
   useNuiEvent<boolean>('setInventoryVisible', setInventoryVisible);
@@ -43,12 +48,16 @@ const Inventory: React.FC = () => {
   return (
     <>
       <Fade in={inventoryVisible}>
-        <div className="inventory-wrapper">
-          <LeftInventory />
-          <InventoryControl />
-          <RightInventory />
-          <Tooltip />
-          <InventoryContext />
+        <div className="app-content">
+          <Header />
+          <div className="inventory-wrapper">
+            <LeftInventory />
+            <InventoryControl infoVisible={infoVisible} setInfoVisible={setInfoVisible} />
+            {!showClothing ? <RightInventory /> : <Clothing />}
+            {/* <Tooltip /> */}
+            <InventoryContext />
+          </div>
+          <Footer infoVisible={infoVisible} setInfoVisible={setInfoVisible} />
         </div>
       </Fade>
       <InventoryHotbar />

@@ -9,6 +9,7 @@ local Query = {
     SELECT_GLOVEBOX = 'SELECT plate, glovebox FROM `{vehicle_table}` WHERE `{vehicle_column}` = ?',
     SELECT_TRUNK = 'SELECT plate, trunk FROM `{vehicle_table}` WHERE `{vehicle_column}` = ?',
     SELECT_PLAYER = 'SELECT inventory FROM `{user_table}` WHERE `{user_column}` = ?',
+    SELECT_PLAYER_CLOTHING = 'SELECT clothing FROM `{user_table}` WHERE `{user_column}` = ?',
     UPDATE_TRUNK = 'UPDATE `{vehicle_table}` SET trunk = ? WHERE `{vehicle_column}` = ?',
     UPDATE_GLOVEBOX = 'UPDATE `{vehicle_table}` SET glovebox = ? WHERE `{vehicle_column}` = ?',
     UPDATE_PLAYER = 'UPDATE `{user_table}` SET inventory = ? WHERE `{user_column}` = ?',
@@ -114,7 +115,8 @@ Citizen.CreateThreadNow(function()
     local clearStashes = GetConvar('inventory:clearstashes', '6 MONTH')
 
     if clearStashes ~= '' then
-        pcall(MySQL.query.await, ('DELETE FROM ox_inventory WHERE lastupdated < (NOW() - INTERVAL %s)'):format(clearStashes))
+        pcall(MySQL.query.await,
+            ('DELETE FROM ox_inventory WHERE lastupdated < (NOW() - INTERVAL %s)'):format(clearStashes))
     end
 end)
 
@@ -123,6 +125,11 @@ db = {}
 function db.loadPlayer(identifier)
     local inventory = MySQL.prepare.await(Query.SELECT_PLAYER, { identifier }) --[[@as string?]]
     return inventory and json.decode(inventory)
+end
+
+function db.loadClothing(identifier)
+    local clothing = MySQL.prepare.await(Query.SELECT_PLAYER_CLOTHING, { identifier }) --[[@as string?]]
+    return clothing and json.decode(clothing)
 end
 
 function db.savePlayer(owner, inventory)

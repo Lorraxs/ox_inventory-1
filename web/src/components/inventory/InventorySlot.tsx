@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { DragSource, Inventory, InventoryType, Slot, SlotWithItem } from '../../typings';
 import { useDrag, useDragDropManager, useDrop } from 'react-dnd';
 import { useAppDispatch } from '../../store';
@@ -27,6 +27,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   { item, inventoryId, inventoryType, inventoryGroups },
   ref
 ) => {
+  const [hovering, setHovering] = useState(false);
   const manager = useDragDropManager();
   const dispatch = useAppDispatch();
   const timerRef = useRef<number | null>(null);
@@ -124,24 +125,48 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
       ref={refs}
       onContextMenu={handleContext}
       onClick={handleClick}
-      className="inventory-slot"
+      className="inventory-slot rounded-md "
       style={{
         filter:
           !canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups }) || !canCraftItem(item, inventoryType)
             ? 'brightness(80%) grayscale(100%)'
             : undefined,
         opacity: isDragging ? 0.4 : 1.0,
-        backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
+
         border: isOver ? '1px dashed rgba(255,255,255,0.4)' : '',
+        overflow: 'hidden',
+      }}
+      onMouseEnter={() => {
+        setHovering(true);
+      }}
+      onMouseLeave={() => {
+        setHovering(false);
       }}
     >
+      <div
+        className="absolute w-full h-full rounded-md"
+        style={{
+          border: hovering ? '2px solid rgb(254, 137, 49, 1)' : '',
+          background: hovering ? 'rgba(254, 137, 49, 0.2)' : '',
+        }}
+      />
+      {<div
+        className="absolute w-full h-full"
+        style={{
+          backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '6vh',
+          backgroundPosition: 'center',
+        }}
+      ></div>}
       {isSlotWithItem(item) && (
         <div
-          className="item-slot-wrapper"
+          className="item-slot-wrapper relative z-10"
           onMouseEnter={() => {
             timerRef.current = window.setTimeout(() => {
               dispatch(openTooltip({ item, inventoryType }));
             }, 500) as unknown as number;
+            }, 200);
           }}
           onMouseLeave={() => {
             dispatch(closeTooltip());
@@ -158,18 +183,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           >
             {inventoryType === 'player' && item.slot <= 5 && <div className="inventory-slot-number">{item.slot}</div>}
             <div className="item-slot-info-wrapper">
-              <p>
-                {item.weight > 0
-                  ? item.weight >= 1000
-                    ? `${(item.weight / 1000).toLocaleString('en-us', {
-                        minimumFractionDigits: 2,
-                      })}kg `
-                    : `${item.weight.toLocaleString('en-us', {
-                        minimumFractionDigits: 0,
-                      })}g `
-                  : ''}
-              </p>
-              <p>{item.count ? item.count.toLocaleString('en-us') + `x` : ''}</p>
+              <p>{item.count}</p>
             </div>
           </div>
           <div>
@@ -210,11 +224,6 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
                 )}
               </>
             )}
-            <div className="inventory-slot-label-box">
-              <div className="inventory-slot-label-text">
-                {item.metadata?.label ? item.metadata.label : Items[item.name]?.label || item.name}
-              </div>
-            </div>
           </div>
         </div>
       )}

@@ -3,6 +3,7 @@ local ESX = setmetatable({}, {
 		local obj = exports.es_extended:getSharedObject()
 		self.SetPlayerData = obj.SetPlayerData
 		self.PlayerLoaded = obj.PlayerLoaded
+		self.TriggerServerCallback = obj.TriggerServerCallback
 		return self[index]
 	end
 })
