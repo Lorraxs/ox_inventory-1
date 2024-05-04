@@ -29,21 +29,24 @@ const ItemNotification = React.forwardRef(
     const slotItem = props.item.item;
 
     return (
-      <div
-        className="item-notification-item-box"
-        style={{
-          backgroundImage: `url(${getItemUrl(slotItem) || 'none'}`,
-          ...props.style,
-        }}
-        ref={ref}
-      >
-        <div className="item-slot-wrapper">
+      <div className="item-notification-item-box rounded-lg relative flex justify-center items-center" ref={ref}>
+        <div
+          className="w-2/3 h-2/3 absolute"
+          style={{
+            backgroundImage: `url(${getItemUrl(slotItem) || 'none'}`,
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            ...props.style,
+          }}
+        ></div>
+        <div className="item-slot-wrapper w-full">
           <div className="item-notification-action-box">
             <p>{props.item.text}</p>
           </div>
-          <div className="inventory-slot-label-box">
+          {/* <div className="inventory-slot-label-box">
             <div className="inventory-slot-label-text">{slotItem.metadata?.label || Items[slotItem.name]?.label}</div>
-          </div>
+          </div> */}
         </div>
       </div>
     );
