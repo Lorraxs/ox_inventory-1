@@ -46,65 +46,62 @@ const InventoryControl: React.FC<Props> = ({ infoVisible, setInfoVisible }) => {
     <>
       <UsefulControls infoVisible={infoVisible} setInfoVisible={setInfoVisible} />
       <div className="inventory-control">
-        <div className="inventory-control-wrapper">
-          <PlayerWeightProgress />
-          <div className="w-2/3">
-            <Line />
+        <div className="inventory-control-wrapper py-5">
+          <div className="flex justify-center flex-col items-center gap-6">
+            <PlayerWeightProgress />
+            <div className="w-2/3">
+              <Line />
+            </div>
           </div>
-          <input
-            className="inventory-control-input rounded-lg mt-16 w-40 "
-            type="number"
-            defaultValue={itemAmount}
-            onChange={inputHandler}
-            min={0}
-          />
-          <Button
-            className="w-40 h-12 mt-8 rounded-lg text-black  text-1xl uppercase outline-none border-none use-slot-drop  cursor-pointer  bg-zinc-300 shadow-inner flex items-center justify-center ui-droppable"
-            ref={use}
-          >
-            {Locale.ui_use || 'SỬ DỤNG'}
-          </Button>
           {!showClothing && (
-            <Button
-              className="bg-orange-400 w-40 h-12 rounded-lg text-black  text-1xl uppercase outline-none border-none"
-              ref={give}
-            >
-              {Locale.ui_give || 'ĐƯA'}
-            </Button>
+            <div className="flex flex-col gap-2 h-2/3">
+              <input
+                className="inventory-control-input rounded-lg mt-16 w-40 "
+                type="number"
+                defaultValue={itemAmount}
+                onChange={inputHandler}
+                min={0}
+              />
+              <Button
+                className="w-40 h-12 mt-8 rounded-lg text-black  text-1xl uppercase outline-none border-none use-slot-drop  cursor-pointer  bg-zinc-300 shadow-inner flex items-center justify-center ui-droppable"
+                ref={use}
+              >
+                {Locale.ui_use || 'SỬ DỤNG'}
+              </Button>
+              <Button
+                className="bg-orange-400 w-40 h-12 rounded-lg text-black  text-1xl uppercase outline-none border-none"
+                ref={give}
+              >
+                {Locale.ui_give || 'ĐƯA'}
+              </Button>
+            </div>
           )}
-          {/* <button
-            className="bg-red-600 w-40 h-16 rounded-lg text-black  text-1xl uppercase outline-none border-none"
-            style={{
-              boxShadow: '0 5px 0px 0 rgb(160, 0, 13)',
-            }}
-            onClick={() => fetchNui('exit')}
-          >
-            {Locale.ui_close || 'ĐÓNG'}
-          </button> */}
-          <div className="w-2/3 mt-16">
-            <Line />
+          <div className="flex justify-center flex-col items-center gap-6">
+            <div className="w-2/3">
+              <Line />
+            </div>
+            {!showClothing ? (
+              <Button
+                className="bg-white w-52 h-16 rounded-lg text-black  text-1xl uppercase outline-none border-none"
+                onClick={() => {
+                  dispatch(setShowClothing(true));
+                  fetchNui('openClothing');
+                }}
+              >
+                {Locale.ui_cloth || 'QUẦN ÁO'}
+              </Button>
+            ) : (
+              <Button
+                className="bg-white w-52 h-16 rounded-lg text-black  text-1xl uppercase outline-none border-none"
+                onClick={() => {
+                  dispatch(setShowClothing(false));
+                  fetchNui('closeClothing');
+                }}
+              >
+                {Locale.ui_cloth || 'KHO ĐỒ'}
+              </Button>
+            )}
           </div>
-          {!showClothing ? (
-            <Button
-              className="bg-white w-52 h-16 rounded-lg text-black  text-1xl uppercase outline-none border-none"
-              onClick={() => {
-                dispatch(setShowClothing(true));
-                fetchNui('openClothing');
-              }}
-            >
-              {Locale.ui_cloth || 'QUẦN ÁO'}
-            </Button>
-          ) : (
-            <Button
-              className="bg-white w-52 h-16 rounded-lg text-black  text-1xl uppercase outline-none border-none"
-              onClick={() => {
-                dispatch(setShowClothing(false));
-                fetchNui('closeClothing');
-              }}
-            >
-              {Locale.ui_cloth || 'KHO ĐỒ'}
-            </Button>
-          )}
         </div>
       </div>
 
