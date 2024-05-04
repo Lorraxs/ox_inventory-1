@@ -161,7 +161,7 @@ local function onOpenInventory()
 				255,
 				255,
 				255,
-				150
+				200
 			)
 		end
 	end)
@@ -194,21 +194,23 @@ end
 
 local ESX = exports['es_extended']:getSharedObject()
 
-local function refreshPlayerClothing()
+local function refreshPlayerClothing(updatePed)
 	if not PlayerData.clothing then return end
-	local p = promise.new()
-	ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
-		if skin == nil then
-		else
-			TriggerEvent('skinchanger:loadSkin', skin)
-			Wait(100)
-			p:resolve()
-		end
-	end)
-	Citizen.Await(p)
+	local ped = updatePed or cache.ped
+	if not updatePed then
+		local p = promise.new()
+		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+			if skin == nil then
+			else
+				TriggerEvent('skinchanger:loadSkin', skin)
+				Wait(100)
+				p:resolve()
+			end
+		end)
+		Citizen.Await(p)
+	end
 
 	local clothing = PlayerData.clothing
-	local ped = cache.ped
 
 	if getGender() == 'male' then
 		SetPedComponentVariation(ped, 1, 0, 0, 2) -- Mask
@@ -249,7 +251,15 @@ local function refreshPlayerClothing()
 		if itemData then
 			if itemData.type == 'component' then
 				SetPedComponentVariation(ped, itemData.c, itemData.d, itemData.t, 2)
+			else
+				SetPedPropIndex(ped, itemData.c, itemData.d, itemData.t, true)
 			end
+		end
+	end
+
+	if not updatePed then
+		if frontendPed then
+			refreshPlayerClothing(frontendPed)
 		end
 	end
 end

@@ -30,7 +30,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   const [hovering, setHovering] = useState(false);
   const manager = useDragDropManager();
   const dispatch = useAppDispatch();
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const canDrag = useCallback(() => {
     return canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups }) && canCraftItem(item, inventoryType);
@@ -150,18 +150,20 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           background: hovering ? 'rgba(254, 137, 49, 0.2)' : '',
         }}
       />
-      {<div
-        className="absolute w-full h-full"
-        style={{
-          backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: '6vh',
-          backgroundPosition: 'center',
-        }}
-      ></div>}
+      {
+        <div
+          className="absolute w-full h-full"
+          style={{
+            backgroundImage: `url(${item?.name ? getItemUrl(item as SlotWithItem) : 'none'}`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: '6vh',
+            backgroundPosition: 'center',
+          }}
+        ></div>
+      }
       {isSlotWithItem(item) && (
         <div
-          className="item-slot-wrapper relative z-10"
+          className="item-slot-wrapper relative "
           onMouseEnter={() => {
             timerRef.current = window.setTimeout(() => {
               dispatch(openTooltip({ item, inventoryType }));

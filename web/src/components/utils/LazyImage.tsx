@@ -11,12 +11,11 @@ import { setTakingAsset } from '../../store/inventory';
 type Props = ICreateAssetPayload & { className?: string };
 
 function LazyImage(payload: Props) {
-  const [loaded, setLoaded] = useState(false);
   const { name, bucket, className } = payload;
+  /* const [loaded, setLoaded] = useState(false);
   const dispatch = useAppDispatch();
   useEffect(() => {
     async function fetchImage() {
-      /* https://supabase.lorraxs.dev/storage/v1/object/public/vehicles/t20.png */
       const path = `https://supabase.lorraxs.dev/storage/v1/object/public/${bucket}/${name}.png`;
       const img = new Image();
       img.onload = () => {
@@ -27,7 +26,6 @@ function LazyImage(payload: Props) {
         console.log('Error loading image', path);
         dispatch(setTakingAsset(true));
         if (!isEnvBrowser()) {
-          /* await Sleep(Math.random() * 1000) */
           const url = await createAssets.add(payload);
           console.log('recieve url', url);
           console.log('Set loaded true');
@@ -46,7 +44,7 @@ function LazyImage(payload: Props) {
     };
   }, [name, bucket, setLoaded]);
   console.log(name, 'Loaded', loaded);
-  if (!loaded) return <Loading />;
+  if (!loaded) return <Loading />; */
   return (
     <ImageComponent
       src={`https://supabase.lorraxs.dev/storage/v1/object/public/${bucket}/${name}.png`}

@@ -4,6 +4,12 @@ import { selectLeftInventory } from '../../store/inventory';
 import { getTotalWeight } from '../../helpers';
 import { Box, Text } from 'lr-components';
 
+const getProgressColor = (progress: number) => {
+  if (progress < 0.3) return 'white';
+  if (progress < 0.9) return '#FF8932';
+  return '#ef233c';
+};
+
 function PlayerWeightProgress() {
   const leftInventory = useAppSelector(selectLeftInventory);
   const weight = useMemo(
@@ -12,7 +18,7 @@ function PlayerWeightProgress() {
   );
 
   if (!leftInventory.maxWeight) return null;
-
+  const progress = (weight / leftInventory.maxWeight) * 100 > 100 ? 100 : (weight / leftInventory.maxWeight) * 100;
   return (
     <Box rWidth={150} rHeight={150} display="flex" justifyContent="center" alignItems="center" position="relative">
       <svg width="100%" height="100%" viewBox="0 0 143 77" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,12 +30,12 @@ function PlayerWeightProgress() {
         />
         <path
           d="M5 72C5 63.2014 6.72007 54.489 10.062 46.3602C13.4039 38.2314 18.3023 30.8454 24.4774 24.6238C30.6525 18.4023 37.9834 13.4671 46.0516 10.1001C54.1197 6.73301 62.7671 5 71.5 5C80.2329 5 88.8803 6.73301 96.9485 10.1001C105.017 13.4671 112.348 18.4023 118.523 24.6238C124.698 30.8454 129.596 38.2314 132.938 46.3602C136.28 54.489 138 63.2014 138 72"
-          stroke="#FE8933"
+          stroke={getProgressColor(progress / 100)}
           strokeWidth="10"
           strokeLinecap="round"
           pathLength={100}
           strokeDasharray={100}
-          strokeDashoffset={100 - (weight / leftInventory.maxWeight) * 100}
+          strokeDashoffset={100 - progress}
         />
       </svg>
       <svg
@@ -50,8 +56,9 @@ function PlayerWeightProgress() {
           fill="#FF8932"
         />
       </svg>
-      <Text position="absolute" rBottom={0}>
-        <span>{weight / 1000}</span> / <span className=" text-lg text-nowrap">{leftInventory.maxWeight / 1000} Kg</span>
+      <Text position="absolute" rBottom={0} fontFamily="Oswald">
+        <span>{(weight / 1000).toFixed(2)}</span> /{' '}
+        <span className=" text-lg text-nowrap">{leftInventory.maxWeight / 1000} Kg</span>
       </Text>
     </Box>
   );

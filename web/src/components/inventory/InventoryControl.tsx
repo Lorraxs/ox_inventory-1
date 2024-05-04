@@ -10,6 +10,7 @@ import { Locale } from '../../store/locale';
 import UsefulControls from './UsefulControls';
 import PlayerWeightProgress from './PlayerWeightProgress';
 import Line from '../Line';
+import { Button } from '@nextui-org/react';
 
 interface Props {
   infoVisible: boolean;
@@ -51,34 +52,28 @@ const InventoryControl: React.FC<Props> = ({ infoVisible, setInfoVisible }) => {
             <Line />
           </div>
           <input
-            className="inventory-control-input rounded-xl mt-16 w-40 "
+            className="inventory-control-input rounded-lg mt-16 w-40 "
             type="number"
             defaultValue={itemAmount}
             onChange={inputHandler}
             min={0}
           />
-          <button
-            className="bg-white w-40 h-16 mt-8 rounded-xl text-black font-bold text-1xl uppercase outline-none border-none"
-            style={{
-              boxShadow: '0 5px 0px 0 rgba(255, 255, 255, 0.5)',
-            }}
+          <Button
+            className="w-40 h-12 mt-8 rounded-lg text-black  text-1xl uppercase outline-none border-none use-slot-drop  cursor-pointer  bg-zinc-300 shadow-inner flex items-center justify-center ui-droppable"
             ref={use}
           >
             {Locale.ui_use || 'SỬ DỤNG'}
-          </button>
+          </Button>
           {!showClothing && (
-            <button
-              className="bg-orange-400 w-40 h-16 rounded-xl text-black font-bold text-1xl uppercase outline-none border-none"
-              style={{
-                boxShadow: '0 5px 0px 0 rgb(112, 43, 16)',
-              }}
+            <Button
+              className="bg-orange-400 w-40 h-12 rounded-lg text-black  text-1xl uppercase outline-none border-none"
               ref={give}
             >
               {Locale.ui_give || 'ĐƯA'}
-            </button>
+            </Button>
           )}
           {/* <button
-            className="bg-red-600 w-40 h-16 rounded-xl text-black font-bold text-1xl uppercase outline-none border-none"
+            className="bg-red-600 w-40 h-16 rounded-lg text-black  text-1xl uppercase outline-none border-none"
             style={{
               boxShadow: '0 5px 0px 0 rgb(160, 0, 13)',
             }}
@@ -90,31 +85,25 @@ const InventoryControl: React.FC<Props> = ({ infoVisible, setInfoVisible }) => {
             <Line />
           </div>
           {!showClothing ? (
-            <button
-              className="bg-white w-40 h-16 rounded-xl text-black font-bold text-1xl uppercase outline-none border-none"
-              style={{
-                boxShadow: '0 5px 0px 0 rgb(160, 0, 13)',
-              }}
+            <Button
+              className="bg-white w-52 h-16 rounded-lg text-black  text-1xl uppercase outline-none border-none"
               onClick={() => {
                 dispatch(setShowClothing(true));
                 fetchNui('openClothing');
               }}
             >
               {Locale.ui_cloth || 'QUẦN ÁO'}
-            </button>
+            </Button>
           ) : (
-            <button
-              className="bg-white w-40 h-16 rounded-xl text-black font-bold text-1xl uppercase outline-none border-none"
-              style={{
-                boxShadow: '0 5px 0px 0 rgb(160, 0, 13)',
-              }}
+            <Button
+              className="bg-white w-52 h-16 rounded-lg text-black  text-1xl uppercase outline-none border-none"
               onClick={() => {
                 dispatch(setShowClothing(false));
                 fetchNui('closeClothing');
               }}
             >
               {Locale.ui_cloth || 'KHO ĐỒ'}
-            </button>
+            </Button>
           )}
         </div>
       </div>

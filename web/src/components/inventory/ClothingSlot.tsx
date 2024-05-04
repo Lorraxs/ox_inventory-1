@@ -17,7 +17,7 @@ interface Props {
 }
 
 const ClothingSlot: React.FC<Props> = ({ slot, item, inventoryType }, ref) => {
-  const timerRef = useRef<NodeJS.Timer | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [hovering, setHovering] = useState(false);
   const dispatch = useAppDispatch();
   const componentData:
@@ -90,6 +90,13 @@ const ClothingSlot: React.FC<Props> = ({ slot, item, inventoryType }, ref) => {
   const connectRef = (element: HTMLDivElement) => drag(drop(element));
   const refs = useMergeRefs([connectRef, ref]);
 
+  const icon = useMemo(() => {
+    if (slot < 12) {
+      return `icon-ped-component-${slot}`;
+    }
+    return `icon-ped-prop-${slot - 12}`;
+  }, [slot]);
+
   return (
     <div
       ref={connectRef}
@@ -105,7 +112,7 @@ const ClothingSlot: React.FC<Props> = ({ slot, item, inventoryType }, ref) => {
         setHovering(false);
       }}
     >
-      <i className={`icon icon-ped-component-${slot} slot-icon ${isSlotWithItem(item) ? 'opacity-5' : 'opacity-50'}`} />
+      <i className={`icon ${icon} slot-icon ${isSlotWithItem(item) ? 'opacity-5' : 'opacity-50'}`} />
       <div
         className="absolute w-full h-full rounded-md"
         style={{

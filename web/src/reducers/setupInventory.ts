@@ -55,7 +55,7 @@ export const setupInventoryReducer: CaseReducer<
     console.log(clothingItems);
     state.clothing = {
       ...state.clothing,
-      items: Array.from(Array(12), (_, index) => {
+      items: Array.from(Array(25), (_, index) => {
         const item = Object.values(clothingItems).find((item) => item?.slot === index) || {
           slot: index,
         };

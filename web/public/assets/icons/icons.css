@@ -1,8 +1,8 @@
 @font-face {
     font-family: "icons";
-    src: url("./icons.eot?aa2278e2192779995fc8064384fdf0bc#iefix") format("embedded-opentype"),
-url("./icons.woff2?aa2278e2192779995fc8064384fdf0bc") format("woff2"),
-url("./icons.woff?aa2278e2192779995fc8064384fdf0bc") format("woff");
+    src: url("./icons.eot?0c5de1fed5e15ffd1b9f022232365afd#iefix") format("embedded-opentype"),
+url("./icons.woff2?0c5de1fed5e15ffd1b9f022232365afd") format("woff2"),
+url("./icons.woff?0c5de1fed5e15ffd1b9f022232365afd") format("woff");
 }
 
 i[class^="icon-"]:before, i[class*=" icon-"]:before {
@@ -505,240 +505,255 @@ i[class^="icon-"]:before, i[class*=" icon-"]:before {
 .icon-ped-component-9:before {
     content: "\f1a3";
 }
-.icon-people:before {
+.icon-ped-prop-0:before {
     content: "\f1a4";
 }
-.icon-phone_ring:before {
+.icon-ped-prop-1:before {
     content: "\f1a5";
 }
-.icon-pickpocket:before {
+.icon-ped-prop-2:before {
     content: "\f1a6";
 }
-.icon-pill:before {
+.icon-ped-prop-6:before {
     content: "\f1a7";
 }
-.icon-pilot:before {
+.icon-ped-prop-7:before {
     content: "\f1a8";
 }
-.icon-pistol:before {
+.icon-people:before {
     content: "\f1a9";
 }
-.icon-plastic_surgery:before {
+.icon-phone_ring:before {
     content: "\f1aa";
 }
-.icon-plate:before {
+.icon-pickpocket:before {
     content: "\f1ab";
 }
-.icon-pointing:before {
+.icon-pill:before {
     content: "\f1ac";
 }
-.icon-police:before {
+.icon-pilot:before {
     content: "\f1ad";
 }
-.icon-potter:before {
+.icon-pistol:before {
     content: "\f1ae";
 }
-.icon-power:before {
+.icon-plastic_surgery:before {
     content: "\f1af";
 }
-.icon-radio:before {
+.icon-plate:before {
     content: "\f1b0";
 }
-.icon-radioactive:before {
+.icon-pointing:before {
     content: "\f1b1";
 }
-.icon-ranking:before {
+.icon-police:before {
     content: "\f1b2";
 }
-.icon-realestate:before {
+.icon-potter:before {
     content: "\f1b3";
 }
-.icon-recents:before {
+.icon-power:before {
     content: "\f1b4";
 }
-.icon-right_arm:before {
+.icon-radio:before {
     content: "\f1b5";
 }
-.icon-right_leg:before {
+.icon-radioactive:before {
     content: "\f1b6";
 }
-.icon-right_vehicle:before {
+.icon-ranking:before {
     content: "\f1b7";
 }
-.icon-right:before {
+.icon-realestate:before {
     content: "\f1b8";
 }
-.icon-rip:before {
+.icon-recents:before {
     content: "\f1b9";
 }
-.icon-rotate:before {
+.icon-right_arm:before {
     content: "\f1ba";
 }
-.icon-safe:before {
+.icon-right_leg:before {
     content: "\f1bb";
 }
-.icon-sale_house:before {
+.icon-right_vehicle:before {
     content: "\f1bc";
 }
-.icon-sausage:before {
+.icon-right:before {
     content: "\f1bd";
 }
-.icon-scope:before {
+.icon-rip:before {
     content: "\f1be";
 }
-.icon-search_people:before {
+.icon-rotate:before {
     content: "\f1bf";
 }
-.icon-search:before {
+.icon-safe:before {
     content: "\f1c0";
 }
-.icon-sedan:before {
+.icon-sale_house:before {
     content: "\f1c1";
 }
-.icon-shoes:before {
+.icon-sausage:before {
     content: "\f1c2";
 }
-.icon-shotgun:before {
+.icon-scope:before {
     content: "\f1c3";
 }
-.icon-sickness:before {
+.icon-search_people:before {
     content: "\f1c4";
 }
-.icon-skill:before {
+.icon-search:before {
     content: "\f1c5";
 }
-.icon-skin:before {
+.icon-sedan:before {
     content: "\f1c6";
 }
-.icon-smell:before {
+.icon-shoes:before {
     content: "\f1c7";
 }
-.icon-sniper_rifle:before {
+.icon-shotgun:before {
     content: "\f1c8";
 }
-.icon-socket:before {
+.icon-sickness:before {
     content: "\f1c9";
 }
-.icon-sound:before {
+.icon-skill:before {
     content: "\f1ca";
 }
-.icon-speedometer:before {
+.icon-skin:before {
     content: "\f1cb";
 }
-.icon-sport:before {
+.icon-smell:before {
     content: "\f1cc";
 }
-.icon-sportsclassic:before {
+.icon-sniper_rifle:before {
     content: "\f1cd";
 }
-.icon-stamina:before {
+.icon-socket:before {
     content: "\f1ce";
 }
-.icon-star:before {
+.icon-sound:before {
     content: "\f1cf";
 }
-.icon-steal_people:before {
+.icon-speedometer:before {
     content: "\f1d0";
 }
-.icon-steal_vehicle:before {
+.icon-sport:before {
     content: "\f1d1";
 }
-.icon-steering:before {
+.icon-sportsclassic:before {
     content: "\f1d2";
 }
-.icon-stomach:before {
+.icon-stamina:before {
     content: "\f1d3";
 }
-.icon-store:before {
+.icon-star:before {
     content: "\f1d4";
 }
-.icon-street_cleaner:before {
+.icon-steal_people:before {
     content: "\f1d5";
 }
-.icon-submachine_gun:before {
+.icon-steal_vehicle:before {
     content: "\f1d6";
 }
-.icon-super:before {
+.icon-steering:before {
     content: "\f1d7";
 }
-.icon-suppressor:before {
+.icon-stomach:before {
     content: "\f1d8";
 }
-.icon-suv:before {
+.icon-store:before {
     content: "\f1d9";
 }
-.icon-tablet:before {
+.icon-street_cleaner:before {
     content: "\f1da";
 }
-.icon-tattoo:before {
+.icon-submachine_gun:before {
     content: "\f1db";
 }
-.icon-taxi:before {
+.icon-super:before {
     content: "\f1dc";
 }
-.icon-temperature:before {
+.icon-suppressor:before {
     content: "\f1dd";
 }
-.icon-tie:before {
+.icon-suv:before {
     content: "\f1de";
 }
-.icon-torso:before {
+.icon-tablet:before {
     content: "\f1df";
 }
-.icon-tractors:before {
+.icon-tattoo:before {
     content: "\f1e0";
 }
-.icon-trucker:before {
+.icon-taxi:before {
     content: "\f1e1";
 }
-.icon-trunk:before {
+.icon-temperature:before {
     content: "\f1e2";
 }
-.icon-tshirt:before {
+.icon-tie:before {
     content: "\f1e3";
 }
-.icon-unlock:before {
+.icon-torso:before {
     content: "\f1e4";
 }
-.icon-unmute:before {
+.icon-tractors:before {
     content: "\f1e5";
 }
-.icon-user:before {
+.icon-trucker:before {
     content: "\f1e6";
 }
-.icon-usergroup:before {
+.icon-trunk:before {
     content: "\f1e7";
 }
-.icon-van:before {
+.icon-tshirt:before {
     content: "\f1e8";
 }
-.icon-vehicle_control:before {
+.icon-unlock:before {
     content: "\f1e9";
 }
-.icon-vehicle_door:before {
+.icon-unmute:before {
     content: "\f1ea";
 }
-.icon-virus:before {
+.icon-user:before {
     content: "\f1eb";
 }
-.icon-wanted:before {
+.icon-usergroup:before {
     content: "\f1ec";
 }
-.icon-watch:before {
+.icon-van:before {
     content: "\f1ed";
 }
-.icon-water:before {
+.icon-vehicle_control:before {
     content: "\f1ee";
 }
-.icon-wave:before {
+.icon-vehicle_door:before {
     content: "\f1ef";
 }
-.icon-weapon:before {
+.icon-virus:before {
     content: "\f1f0";
 }
-.icon-weed:before {
+.icon-wanted:before {
     content: "\f1f1";
 }
-.icon-weight:before {
+.icon-watch:before {
     content: "\f1f2";
+}
+.icon-water:before {
+    content: "\f1f3";
+}
+.icon-wave:before {
+    content: "\f1f4";
+}
+.icon-weapon:before {
+    content: "\f1f5";
+}
+.icon-weed:before {
+    content: "\f1f6";
+}
+.icon-weight:before {
+    content: "\f1f7";
 }

@@ -5,9 +5,9 @@
 
 $mainColor: #22232c;
 $textColor: #c1c2c5;
-$mainFont: Montserrat;
+$mainFont: Oswald;
 
-$secondaryColor: rgba(12, 12, 12, 0.4);
+$secondaryColor: rgba(119, 119, 119, 0.4);
 $secondaryColorHighlight: #33343f;
 $secondaryColorLight: rgba(0, 0, 0, 0.5);
 $secondaryColorDark: rgba(12, 12, 12, 0.8);
@@ -17,6 +17,10 @@ $gridRows: 7;
 $gridSize: 8.5vh;
 $gridGap: 10px;
 $containerSize: calc(#{$gridRows} * #{$gridSize + 0.22vh} + #{$gridRows} * #{$gridGap});
+
+.inventory-header {
+  width: calc($gridSize * $gridCols + $gridGap * ($gridCols - 1));
+}
 
 :root {
   --nextui-background: 0 0 0;
@@ -114,6 +118,10 @@ input[type='number']::-webkit-outer-spin-button {
 
 .tooltip-markdown > p {
   margin: 0;
+}
+
+button {
+  font-family: $mainFont;
 }
 
 button:active {
@@ -305,10 +313,14 @@ button:active {
   image-rendering: -webkit-optimize-contrast;
   position: relative;
   color: $textColor;
-  border-color: rgba(0, 0, 0, 0.2);
+  border-color: rgba(0, 0, 0, 0);
   border-style: inset;
   border-width: 1px;
-  background-image: radial-gradient(circle, rgba(69, 67, 81, 0.6) 0%, rgba(35, 34, 42, 0.6) 100%);
+  background-image: radial-gradient(
+    63.89% 63.89% at 50% 50%,
+    rgba(217, 217, 217, 0.2) 0%,
+    rgba(115, 115, 115, 0.2) 100%
+  );
 }
 
 .inventory-slot-label-box {
@@ -589,9 +601,11 @@ button:active {
   grid-template-columns: repeat(3, $gridSize);
   grid-auto-rows: $gridSize + 0.22vh;
   grid-template-areas:
-    'slot1 slot3 slot4'
-    'slot6 slot7 slot8'
-    'slot9 slot10 slot11';
+    'slot12 slot1 slot13'
+    'slot11 slot8 slot9'
+    'slot19 slot7 slot18'
+    'slot3 slot5 slot4'
+    'slot14 slot6 slot10';
 }
 
 .slot-icon {

@@ -29,14 +29,14 @@ debugData([
         maxWeight: 5000,
         items: [
           {
-            name: 'male_component_11_100_1',
-            slot: 1,
-            weight: 100,
+            metadata: { durability: 100, registered: 'Tri Nguyen', serial: '493906YNB676320', ammo: 0, components: [] },
             stack: false,
             count: 1,
-            metadata: [],
-            description: '11 100 1',
-            label: 'Áo',
+            slot: 5,
+            weight: 5130,
+            label: 'Pistol',
+            close: false,
+            name: 'WEAPON_PISTOL',
           },
           { slot: 3, name: 'copper', weight: 100, count: 12, metadata: { type: 'Special' } },
           {
@@ -85,7 +85,7 @@ debugData([
       },
       clothingItems: [
         {
-          slot: 4,
+          slot: 11,
           name: 'male_component_11_100_1',
           weight: 500,
           price: 300,

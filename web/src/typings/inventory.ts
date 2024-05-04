@@ -35,16 +35,39 @@ export enum EPedComponent {
   PV_COMP_MAX = 12,
 }
 
+export enum EAnchorPoints {
+  ANCHOR_HEAD = 0, // "p_head"
+  ANCHOR_EYES = 1, // "p_eyes"
+  ANCHOR_EARS = 2, // "p_ears"
+  ANCHOR_MOUTH = 3, // "p_mouth"
+  ANCHOR_LEFT_HAND = 4, // "p_lhand"
+  ANCHOR_RIGHT_HAND = 5, // "p_rhand"
+  ANCHOR_LEFT_WRIST = 6, // "p_lwrist"
+  ANCHOR_RIGHT_WRIST = 7, // "p_rwrist"
+  ANCHOR_HIP = 8, // "p_lhip"
+  ANCHOR_LEFT_FOOT = 9, // "p_lfoot"
+  ANCHOR_RIGHT_FOOT = 10, // "p_rfoot"
+  ANCHOR_PH_L_HAND = 11, // "ph_lhand"
+  ANCHOR_PH_R_HAND = 12, // "ph_rhand"
+  NUM_ANCHORS = 13,
+}
+
 export const ClothingSlots = [
-  1, //'beard',
+  1, //'mask',
   3, //'torso',
   4, //'leg',
+  5, //'bag',
   6, //'shoes',
   7, //'accessory',
   8, //'undershirt',
   9, //'kevlar',
   10, //'badge',
   11, //'top',
+  12, //'hat',
+  13, //'glasses',
+  14, //'ear',
+  18, //'watch',
+  19, //'bracelet',
 ] as const;
 
 export type IClothingSlot = typeof ClothingSlots[number];

@@ -32,17 +32,17 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
   return (
     <>
       <div className="inventory-grid-wrapper w-1/3 items-center" style={{ pointerEvents: isBusy ? 'none' : 'auto' }}>
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-4 inventory-header">
           <div className="flex items-center gap-2">
             <NIcon />
             <Text fontWeight={'bold'} className="text-lg uppercase" color="#FF8932" textShadow="0 0 40px #FF8932">
               {inventory.label}
             </Text>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex  items-center gap-2">
             {inventory.maxWeight && (
-              <Text textWrap="nowrap">
-                <span>{weight / 1000}</span> /{' '}
+              <Text textWrap="nowrap" fontFamily="Oswald">
+                <span className="text-sm">{(weight / 1000).toFixed(2)}</span> /{' '}
                 <span className="font-bold text-lg text-nowrap">{inventory.maxWeight / 1000} Kg</span>
               </Text>
             )}
