@@ -664,3 +664,58 @@ lib.addCommand('viewinv', {
 }, function(source, args)
 	Inventory.InspectInventory(source, tonumber(args.invId) or args.invId)
 end)
+
+function dump(o)
+	if type(o) == 'table' then
+		local s = '{ '
+		for k, v in pairs(o) do
+			if type(k) ~= 'number' then k = '"' .. k .. '"' end
+			s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
+		end
+		return s .. '} '
+	else
+		return ("'%s'"):format(tostring(o))
+	end
+end
+
+local tempClothes = lib.load('data.clothes')
+
+RegisterCommand("generateclothes", function(source, args, rawCommand)
+	tempClothes = lib.load('data.clothes')
+	TriggerClientEvent("ox_inventory:generateClothes", source)
+end, true)
+
+--[[ RegisterNetEvent("ox_inventory:onNewClothe", function(name, data)
+	print("Add clothes for " .. name)
+	tempClothes[name] = data
+end) ]]
+
+RegisterNetEvent("ox_inventory:onGenerateClotheDone", function(data)
+	for k, v in pairs(data) do
+		tempClothes[k] = v
+	end
+	print(dump(tempClothes))
+	local file = io.open("cache\\clothes.lua", "w")
+	--[[ local file = LoadResourceFile("ox_inventory", "data/clothes.lua") ]]
+	print(file)
+	if file then
+		--[[ file:write("return " .. dump(tempClothes)) ]]
+		file:write("return {\n")
+		for k, v in pairs(tempClothes) do
+			print(k)
+			file:write(string.format("\t['%s'] = {\n", k))
+			for key, value in pairs(v) do
+				if type(value) == "string" then
+					file:write(string.format("\t\t%s = '%s',\n", key, value))
+				else
+					file:write(string.format("\t\t%s = %s,\n", key, value))
+				end
+			end
+			file:write("\t},\n")
+		end
+		file:write("}\n")
+		file:close()
+	else
+		print("Failed to open file")
+	end
+end)

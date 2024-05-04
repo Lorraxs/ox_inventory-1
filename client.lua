@@ -2103,3 +2103,69 @@ lib.callback.register('ox_inventory:getVehicleData', function(netid)
 		return GetEntityModel(entity), GetVehicleClass(entity)
 	end
 end)
+
+local components = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 }
+local componentLabels = {
+	[0] = 'head',
+	[1] = 'mask',
+	[2] = 'hair',
+	[3] = 'torso',
+	[4] = 'legs',
+	[5] = 'bags',
+	[6] = 'feet',
+	[7] = 'accessories',
+	[8] = 'undershirt',
+	[9] = 'bodyarmor',
+	[10] = 'decals',
+	[11] = 'tops'
+}
+local props = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
+local propLabels = {
+	[0] = 'hats',
+	[1] = 'glasses',
+	[2] = 'ears',
+	[3] = 'necklaces',
+	[4] = 'bags',
+	[5] = 'scarfs',
+	[6] = 'watches',
+	[7] = 'bracelets',
+	[8] = 'gloves',
+	[9] = 'rings'
+}
+
+RegisterNetEvent("ox_inventory:generateClothes", function()
+	local gender = getGender()
+	local clothes = {}
+	for k, componentId in ipairs(components) do
+		local numDrawable = GetNumberOfPedDrawableVariations(PlayerPedId(), componentId)
+		for drawableId = 0, numDrawable do
+			local numTexture = GetNumberOfPedTextureVariations(PlayerPedId(), drawableId, drawableId)
+			for textureId = 0, numTexture do
+				clothes[("%s_%s_%s_%s_%s"):format(gender, "component", componentId, drawableId, textureId)] = {
+					label = componentLabels[componentId],
+					type = "component",
+					c = componentId,
+					d = drawableId,
+					t = textureId
+				}
+			end
+		end
+	end
+	for k, propId in ipairs(props) do
+		local numDrawable = GetNumberOfPedPropDrawableVariations(PlayerPedId(), propId)
+		for drawableId = 0, numDrawable do
+			local numTexture = GetNumberOfPedPropTextureVariations(PlayerPedId(), propId, drawableId)
+			for textureId = 0, numTexture do
+				clothes[("%s_%s_%s_%s_%s"):format(gender, "prop", propId, drawableId, textureId)] = {
+					label = "prop",
+					type = "prop",
+					c = propId,
+					d = drawableId,
+					t = textureId
+				}
+			end
+		end
+	end
+	--[[ TriggerServerEvent("ox_inventory:onGenerateClotheDone") ]]
+	TriggerLatentServerEvent("ox_inventory:onGenerateClotheDone", 10000, clothes)
+end)
