@@ -72,6 +72,24 @@ export const ClothingSlots = [
 
 export type IClothingSlot = typeof ClothingSlots[number];
 
+export const ClothingSlotLabels: { [key in IClothingSlot]: string } = {
+  1: 'Mặt nạ',
+  3: 'Áo',
+  4: 'Quần',
+  5: 'Túi',
+  6: 'Giày',
+  7: 'Phụ kiện',
+  8: 'Áo lót',
+  9: 'Kevlar',
+  10: 'Huy hiệu',
+  11: 'Áo ngoài',
+  12: 'Mũ',
+  13: 'Kính',
+  14: 'Tai',
+  18: 'Đồng hồ',
+  19: 'Vòng tay',
+};
+
 export type IClothingInventory = {
   id: 'clothing';
   type: InventoryType.CLOTHING;

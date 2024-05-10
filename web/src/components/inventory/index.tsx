@@ -16,6 +16,7 @@ import Fade from '../utils/transitions/Fade';
 import Header from '../Header';
 import Footer from '../Footer';
 import Clothing from './Clothing';
+import FastSlots from './FastSlots';
 
 const Inventory: React.FC = () => {
   const [inventoryVisible, setInventoryVisible] = useState(false);
@@ -50,12 +51,17 @@ const Inventory: React.FC = () => {
       <Fade in={inventoryVisible}>
         <div className="app-content">
           <Header />
-          <div className="inventory-wrapper">
-            <LeftInventory />
-            <InventoryControl infoVisible={infoVisible} setInfoVisible={setInfoVisible} />
-            {!showClothing ? <RightInventory /> : <Clothing />}
-            {/* <Tooltip /> */}
-            <InventoryContext />
+          <div className="inventory-wrapper px-10 py-5 gap-52">
+            <div>
+              <FastSlots />
+            </div>
+            <div className="flex w-full gap-[70px]">
+              <LeftInventory />
+              {/* <InventoryControl infoVisible={infoVisible} setInfoVisible={setInfoVisible} /> */}
+              {!showClothing ? <RightInventory /> : <Clothing />}
+              {/* <Tooltip /> */}
+              <InventoryContext />
+            </div>
           </div>
           <Footer infoVisible={infoVisible} setInfoVisible={setInfoVisible} />
         </div>

@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@floating-ui/react": "^0.25.4",
+    "@mantine/hooks": "^7.9.1",
     "@nextui-org/react": "^2.3.6",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.12",

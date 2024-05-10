@@ -33,7 +33,7 @@ debugData([
             stack: false,
             count: 1,
             slot: 5,
-            weight: 5130,
+            weight: 1130,
             label: 'Pistol',
             close: false,
             name: 'WEAPON_PISTOL',

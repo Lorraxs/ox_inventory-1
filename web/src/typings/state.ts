@@ -16,4 +16,5 @@ export type State = {
   showClothing: boolean;
   clothing: IClothingInventory;
   takeingAsset: boolean;
+  openedSlot: number;
 };

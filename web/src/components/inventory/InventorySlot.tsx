@@ -15,6 +15,10 @@ import { ItemsPayload } from '../../reducers/refreshSlots';
 import { closeTooltip, openTooltip } from '../../store/tooltip';
 import { openContextMenu } from '../../store/contextMenu';
 import { useMergeRefs } from '@floating-ui/react';
+import { useHover } from '@mantine/hooks';
+import classNames from 'classnames';
+import ItemRarity from './ItemRarity';
+import { Box } from 'lr-components';
 
 interface SlotProps {
   inventoryId: Inventory['id'];
@@ -23,13 +27,14 @@ interface SlotProps {
   item: Slot;
   selectedCategory?: ICategory;
   searching?: string;
+  locked?: boolean;
 }
 
 const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> = (
-  { item, inventoryId, inventoryType, inventoryGroups, selectedCategory, searching },
+  { item, inventoryId, inventoryType, inventoryGroups, selectedCategory, searching, locked },
   ref
 ) => {
-  const [hovering, setHovering] = useState(false);
+  const { hovered, ref: hoverRef } = useHover();
   const manager = useDragDropManager();
   const dispatch = useAppDispatch();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -120,7 +125,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
     }
   };
 
-  const refs = useMergeRefs([connectRef, ref]);
+  const refs = useMergeRefs([connectRef, ref, hoverRef]);
   const shouldRenderItem = useMemo(() => {
     if (!item.name) return false;
     if (searching) {
@@ -151,12 +156,12 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
   }, [item.name, selectedCategory, Items, searching]);
 
   return (
-    <div
+    <Box
       ref={refs}
       onContextMenu={handleContext}
       onClick={handleClick}
-      className="inventory-slot rounded-md "
-      style={{
+      className="inventory-slot"
+      /* style={{
         filter:
           !canPurchaseItem(item, { type: inventoryType, groups: inventoryGroups }) || !canCraftItem(item, inventoryType)
             ? 'brightness(80%) grayscale(100%)'
@@ -164,22 +169,16 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
         opacity: isDragging ? 0.4 : 1.0,
 
         border: isOver ? '1px dashed rgba(255,255,255,0.4)' : '',
-        overflow: 'hidden',
-      }}
-      onMouseEnter={() => {
-        setHovering(true);
-      }}
-      onMouseLeave={() => {
-        setHovering(false);
-      }}
+      }} */
+      rWidth={88}
+      rHeight={88}
     >
-      <div
-        className="absolute w-full h-full rounded-md"
+      {/* <div
+        className="absolute w-full h-full "
         style={{
-          border: hovering ? '2px solid rgb(254, 137, 49, 1)' : '',
-          background: hovering ? 'rgba(254, 137, 49, 0.2)' : '',
+          background: hovered ? 'rgba(254, 137, 49, 0.2)' : '',
         }}
-      />
+      /> */}
       {
         <div
           className="absolute w-full h-full"
@@ -191,9 +190,10 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           }}
         ></div>
       }
+
       {isSlotWithItem(item) && shouldRenderItem && (
         <div
-          className="item-slot-wrapper relative "
+          className="item-slot-wrapper relative"
           onMouseEnter={() => {
             timerRef.current = window.setTimeout(() => {
               dispatch(openTooltip({ item, inventoryType }));
@@ -212,14 +212,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
             className={
               inventoryType === 'player' && item.slot <= 5 ? 'item-hotslot-header-wrapper' : 'item-slot-header-wrapper'
             }
-          >
-            {inventoryType === 'player' && item.slot <= 5 && (
-              <div className="inventory-slot-number rounded-br-lg">{item.slot}</div>
-            )}
-            <div className="item-slot-info-wrapper ">
-              <p>{item.count}</p>
-            </div>
-          </div>
+          ></div>
           <div>
             {inventoryType !== 'shop' && item?.durability !== undefined && (
               <WeightBar percent={item.durability} durability />
@@ -261,7 +254,37 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           </div>
         </div>
       )}
-    </div>
+      <div className="absolute top-0 left-0 w-full h-full flex inventory-slot-border">
+        <div
+          className={classNames('w-2/12 border-t border-l border-b border-white rounded-tl-sm rounded-bl-sm', {
+            'border-opacity-30': !hovered,
+          })}
+        ></div>
+        <div
+          className={classNames('w-4/12 border-b border-white relative flex justify-center items-center', {
+            'border-opacity-30': !hovered,
+          })}
+        >
+          <div className="item-slot-info ">
+            {locked ? (
+              <i
+                className={classNames('icon icon-lock', {
+                  'opacity-30': !hovered,
+                })}
+              />
+            ) : (
+              <p>{item.count}</p>
+            )}
+          </div>
+          {isSlotWithItem(item) && <ItemRarity item={item} />}
+        </div>
+        <div
+          className={classNames('w-6/12 border-b border-r border-t border-white rounded-tr-sm rounded-br-sm', {
+            'border-opacity-30': !hovered,
+          })}
+        ></div>
+      </div>
+    </Box>
   );
 };
 

@@ -1,3 +1,5 @@
+import { Rarity } from './slot';
+
 export type ItemData = {
   name: string;
   label: string;
@@ -10,6 +12,7 @@ export type ItemData = {
   buttons?: string[];
   ammoName?: string;
   image?: string;
+  rarity?: Rarity;
 };
 
 export interface ColorRGB {

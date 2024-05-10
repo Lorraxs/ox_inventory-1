@@ -90,81 +90,20 @@ local defaultInventory = {
 local currentInventory = defaultInventory
 local isClothingOpen = false
 
-local function showFrontendPed()
-	print("showFrontendPed")
 
-	Wait(100)
-	SetMouseCursorVisibleInMenus(false)
-	if frontendPed then
-		DeleteEntity(frontendPed)
-	end
-	frontendPed = ClonePed(PlayerPedId(), false, false, true)
-	while not DoesEntityExist(frontendPed) do
-		Wait(0)
-	end
-	SetEntityVisible(frontendPed, false, false)
-	GivePedToPauseMenu(frontendPed, 2)
-	SetPauseMenuPedLighting(true)
-	SetPauseMenuPedSleepState(true)
-	ReplaceHudColourWithRgba(117, 0, 0, 0, 0)
-end
-
-local function hideFrontendPed()
-	print("hideFrontendPed")
-	if (frontendPed) then DeletePed(frontendPed) end
-	frontendPed = nil
-	SetScriptGfxDrawBehindPausemenu(false)
-	ClearPedInPauseMenu()
-end
 
 RegisterNUICallback("openClothing", function(body, resultCallback)
 	isClothingOpen = true
 	resultCallback("ok")
-	showFrontendPed()
 end)
 
 RegisterNUICallback("closeClothing", function(body, resultCallback)
 	isClothingOpen = false
 	resultCallback("ok")
-	hideFrontendPed()
 end)
 
 local function onOpenInventory()
-	if not HasStreamedTextureDictLoaded("lr-texture") then
-		RequestStreamedTextureDict("lr-texture", true)
-	end
-	Citizen.CreateThread(function()
-		while not HasStreamedTextureDictLoaded("lr-texture") do
-			print("loading texture")
-			Wait(0)
-		end
-		SetFrontendActive(true)
-		ActivateFrontendMenu(GetHashKey('FE_MENU_VERSION_EMPTY'), false, 42)
-		SetScriptGfxAlign(67, 67)
-		if isClothingOpen then
-			showFrontendPed()
-		end
 
-
-		while plyState.invOpen do
-			Wait(0)
-			ResetScriptGfxAlign()
-			SetScriptGfxDrawBehindPausemenu(true)
-			DrawSprite(
-				'lr-texture',
-				'background',
-				0.5,
-				0.5,
-				1.0,
-				1.0,
-				0.0,
-				255,
-				255,
-				255,
-				100
-			)
-		end
-	end)
 end
 
 local function onCloseInventory()

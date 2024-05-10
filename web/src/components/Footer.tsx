@@ -1,4 +1,4 @@
-import { Box, Button } from 'lr-components';
+import { Box, Button, Text } from 'lr-components';
 import React, { Fragment, useMemo } from 'react';
 import Line from './Line';
 import { useAppSelector } from '../store';
@@ -28,136 +28,22 @@ function Footer({ infoVisible, setInfoVisible }: Props) {
     return Object.entries(hoverData.item.ingredients).sort((a, b) => a[1] - b[1]);
   }, [hoverData]);
   return (
-    <div style={{ height: '100%' }} className=" px-16">
-      <Box className="w-full">
-        <Line />
-      </Box>
-      <div className="flex  h-full items-center justify-center ">
-        <div className="rounded-md bg-white bg-opacity-5  w-1/2">
-          {hoverData.open && hoverData.item && (
-            <div className="flex items-start p-4 gap-4">
-              <div
-                className="w-16 h-16 bg-white bg-opacity-25 rounded-md"
-                style={{
-                  backgroundImage: `url(${hoverData.item?.name ? getItemUrl(hoverData.item as SlotWithItem) : 'none'}`,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: '70%',
-                  backgroundPosition: 'center',
-                }}
-              />
-              <div>
-                <h1
-                  className="font-bold"
-                  style={{
-                    textShadow: '0 0 40px #FFFFFF',
-                  }}
-                >
-                  {hoverData.item?.metadata?.label
-                    ? hoverData.item?.metadata.label
-                    : Items[hoverData.item?.name]?.label || hoverData.item?.name}
-                </h1>
-                <h5 className="italic text-gray-500">
-                  {hoverData.item.weight > 0
-                    ? hoverData.item.weight >= 1000
-                      ? `${(hoverData.item.weight / 1000).toLocaleString('en-us', {
-                          minimumFractionDigits: 2,
-                        })}kg `
-                      : `${hoverData.item.weight.toLocaleString('en-us', {
-                          minimumFractionDigits: 0,
-                        })}g `
-                    : ''}{' '}
-                  {hoverData.inventoryType !== 'crafting' && `x ${hoverData.item.count}`}
-                </h5>
-                {description && (
-                  <div className="tooltip-description">
-                    <ReactMarkdown className="text-sm">{description}</ReactMarkdown>
-                  </div>
-                )}
-              </div>
-              {hoverData.inventoryType === 'crafting' && (
-                <div>
-                  <div className="tooltip-crafting-duration">
-                    <ClockIcon />
-                    <p>{(hoverData.item.duration !== undefined ? hoverData.item.duration : 3000) / 1000}s</p>
-                  </div>
-                </div>
-              )}
-              {hoverData.inventoryType !== 'crafting' ? (
-                <>
-                  {hoverData.item.durability !== undefined && (
-                    <p>
-                      {Locale.ui_durability}: {Math.trunc(hoverData.item.durability)}
-                    </p>
-                  )}
-                  {hoverData.item.metadata?.ammo !== undefined && (
-                    <p>
-                      {Locale.ui_ammo}: {hoverData.item.metadata.ammo}
-                    </p>
-                  )}
-                  {ammoName && (
-                    <p>
-                      {Locale.ammo_type}: {ammoName}
-                    </p>
-                  )}
-                  {hoverData.item.metadata?.serial && (
-                    <p>
-                      {Locale.ui_serial}: {hoverData.item.metadata.serial}
-                    </p>
-                  )}
-                  {hoverData.item.metadata?.components && hoverData.item.metadata?.components[0] && (
-                    <p>
-                      {Locale.ui_components}:{' '}
-                      {(hoverData.item.metadata?.components).map((component: string, index: number, array: []) =>
-                        index + 1 === array.length ? Items[component]?.label : Items[component]?.label + ', '
-                      )}
-                    </p>
-                  )}
-                  {hoverData.item.metadata?.weapontint && (
-                    <p>
-                      {Locale.ui_tint}: {hoverData.item.metadata.weapontint}
-                    </p>
-                  )}
-                  {additionalMetadata.map((data: { metadata: string; value: string }, index: number) => (
-                    <Fragment key={`metadata-${index}`}>
-                      {hoverData?.item?.metadata && hoverData.item.metadata[data.metadata] && (
-                        <p>
-                          {data.value}: {hoverData.item.metadata[data.metadata]}
-                        </p>
-                      )}
-                    </Fragment>
-                  ))}
-                </>
-              ) : (
-                <div className="grid grid-cols-2">
-                  {ingredients &&
-                    ingredients.map((ingredient) => {
-                      const [item, count] = [ingredient[0], ingredient[1]];
-                      return (
-                        <div className="tooltip-ingredient" key={`ingredient-${item}`}>
-                          <img src={item ? getItemUrl(item) : 'none'} alt="item-image" />
-                          <p>
-                            {count >= 1
-                              ? `${count}x ${Items[item]?.label || item}`
-                              : count === 0
-                              ? `${Items[item]?.label || item}`
-                              : count < 1 && `${count * 100}% ${Items[item]?.label || item}`}
-                          </p>
-                        </div>
-                      );
-                    })}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 absolute right-20">
-          <Button
-            label="PHÍM TẮT"
-            color="white"
-            className=" bg-white bg-opacity-15"
-            onClick={() => setInfoVisible(true)}
-          ></Button>
-        </div>
+    <div style={{ height: '100%' }}>
+      <div className="flex  h-full items-center justify-center bg-white bg-opacity-5 gap-4">
+        <svg width="47" height="23" viewBox="0 0 47 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M46 5C46 7.21912 44.5544 9.10046 42.5536 9.75391C42.6185 10.2316 42.7512 10.7512 43 11H45C46.6 11 47 12 47 12.5V22.5C47 22.9 46.6667 23 46.5 23H41H35.5C35.3333 23 35 22.9 35 22.5V12.5C35 12 35.4 11 37 11H39C39.2488 10.7512 39.3815 10.2316 39.4464 9.75391C37.4456 9.10046 36 7.21912 36 5C36 2.23853 38.2386 0 41 0C43.7614 0 46 2.23853 46 5ZM0.5 7.5V4.5H4.5V7.5C4.5 10.2615 6.73859 12.5 9.5 12.5H21V9L29 14.5L21 20V16.5H9.5C4.52942 16.5 0.5 12.4706 0.5 7.5Z"
+            fill="white"
+            opacity={0.3}
+          />
+        </svg>
+        <Text className="text-white text-nowrap text-sm" fontFamily="Oswald" textTransform="uppercase" opacity={0.3}>
+          KÉO VẬT PHẨM VÀO ĐÂY
+          <br />
+          ĐỂ CHUYỂN NÓ CHO NGƯỜI CHƠI KHÁC
+        </Text>
       </div>
     </div>
   );

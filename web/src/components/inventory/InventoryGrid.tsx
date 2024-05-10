@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ICategory, Inventory } from '../../typings';
+import { ICategory, Inventory, InventoryType } from '../../typings';
 import WeightBar from '../utils/WeightBar';
 import InventorySlot from './InventorySlot';
 import { getTotalWeight } from '../../helpers';
@@ -7,8 +7,9 @@ import { useAppSelector } from '../../store';
 import { useIntersection } from '../../hooks/useIntersection';
 import NIcon from '../utils/NIcon';
 import { Button, Input } from '@nextui-org/react';
-import { Text } from 'lr-components';
+import { Box, Text } from 'lr-components';
 import classNames from 'classnames';
+import { selectOpenedSlot } from '../../store/inventory';
 
 const PAGE_SIZE = 30;
 
@@ -26,6 +27,7 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
   const isBusy = useAppSelector((state) => state.inventory.isBusy);
   const [selectedCategory, setSelectedCategory] = useState<ICategory>('all');
   const [searching, setSearching] = useState('');
+  const openedSlot = useAppSelector(selectOpenedSlot);
 
   useEffect(() => {
     if (entry && entry.isIntersecting) {
@@ -34,8 +36,8 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
   }, [entry]);
   return (
     <>
-      <div className="inventory-grid-wrapper w-1/3 items-center" style={{ pointerEvents: isBusy ? 'none' : 'auto' }}>
-        <div className="flex items-center justify-between gap-4 inventory-header">
+      <Box className="inventory-grid-wrapper gap-4" pointerEvents={isBusy ? 'none' : 'all'}>
+        {/* <div className="flex items-center justify-between gap-4 inventory-header">
           <div className="flex items-center gap-2">
             <NIcon />
             <Text
@@ -70,8 +72,8 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
               />
             )}
           </div>
-        </div>
-        <div
+        </div> */}
+        {/* <div
           className={classNames('filter-wrapper', 'inventory-header', {
             'opacity-0': !playerInventory,
           })}
@@ -126,27 +128,83 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
           >
             Trang phục
           </Button>
-        </div>
+        </div> */}
         {/* <div>
           <WeightBar percent={inventory.maxWeight ? (weight / inventory.maxWeight) * 100 : 0} />
         </div> */}
-        <div className="inventory-grid-container pr-2" ref={containerRef}>
+        {inventory.type === InventoryType.PLAYER && (
           <>
-            {inventory.items.slice(0, (page + 1) * PAGE_SIZE).map((item, index) => (
-              <InventorySlot
-                searching={searching}
-                selectedCategory={selectedCategory}
-                key={`${inventory.type}-${inventory.id}-${item.slot}`}
-                item={item}
-                ref={index === (page + 1) * PAGE_SIZE - 1 ? ref : null}
-                inventoryType={inventory.type}
-                inventoryGroups={inventory.groups}
-                inventoryId={inventory.id}
-              />
-            ))}
+            <Text fontFamily="Oswald" rFontSize={18} opacity={0.8}>
+              TÚI QUẦN
+            </Text>
+            <div className="">
+              <div className="flex gap-[22px] w-full">
+                <InventorySlot
+                  item={inventory.items[5]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[6]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[7]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[8]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[9]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[10]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+              </div>
+            </div>
+            <Text fontFamily="Oswald" rFontSize={18} opacity={0.8}>
+              BA LÔ
+            </Text>
           </>
-        </div>
-      </div>
+        )}
+        <Box className="inventory-grid-container pr-2" ref={containerRef} rHeight={580}>
+          <>
+            {inventory.items
+              .slice(0, (page + 1) * PAGE_SIZE)
+              .map(
+                (item, index) =>
+                  (inventory.type !== InventoryType.PLAYER || item.slot > 11) && (
+                    <InventorySlot
+                      searching={searching}
+                      selectedCategory={selectedCategory}
+                      key={`${inventory.type}-${inventory.id}-${item.slot}`}
+                      item={item}
+                      ref={index === (page + 1) * PAGE_SIZE - 1 ? ref : null}
+                      inventoryType={inventory.type}
+                      inventoryGroups={inventory.groups}
+                      inventoryId={inventory.id}
+                      locked={(inventory.type === InventoryType.PLAYER && item.slot > openedSlot + 11) || false}
+                    />
+                  )
+              )}
+          </>
+        </Box>
+      </Box>
     </>
   );
 };

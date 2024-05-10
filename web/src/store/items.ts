@@ -10,6 +10,7 @@ export const Items: {
     stack: true,
     usable: true,
     count: 0,
+    rarity: 'legendary',
   },
   burger: {
     name: 'burger',

@@ -1,50 +1,66 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Text } from 'lr-components';
 import Line from './Line';
+import PlayerWeightProgress from './inventory/PlayerWeightProgress';
+import { useAppSelector } from '../store';
+import { selectLeftInventory } from '../store/inventory';
+import { getTotalWeight } from '../helpers';
 
 function Header() {
+  const leftInventory = useAppSelector(selectLeftInventory);
+  const weight = useMemo(
+    () => (leftInventory.maxWeight !== undefined ? Math.floor(getTotalWeight(leftInventory.items) * 1000) / 1000 : 0),
+    [leftInventory.maxWeight, leftInventory.items]
+  );
+  console.log(leftInventory.maxWeight);
+  if (!leftInventory.maxWeight) return null;
   return (
-    <div className=" bg-opacity-20 flex justify-center items-center px-16 py-8">
-      <Box className="w-2/12">
-        <Text rFontSize={32} fontWeight={'bold'} color="#fd9347" rLineHeight={32}>
-          INVENTORY
-        </Text>
-        <Text rFontSize={12} fontWeight={600}>
-          OF YOUR CHARACTER
+    <div className=" bg-opacity-20 flex justify-center items-center px-16 py-8 gap-11">
+      <Box className="w-3/12">
+        <Text
+          rFontSize={14}
+          fontFamily="Oswald"
+          rLineHeight={18}
+          textAlign="right"
+          opacity={0.7}
+          className="text-nowrap"
+        >
+          CLICK VÀO VẬT PHẨM
+          <br />
+          -THÔNG TIN VÀ TƯƠNG TÁC
         </Text>
       </Box>
-      <Box className="w-3/12">
+      <Box className="w-full">
         <Line />
       </Box>
-      <Box
-        className="self-center w-2/12 text-center"
-        backgroundImage={`radial-gradient(
-      ellipse 50% 15% at 50% 0%,
-        #ffff 0%,
-        #fff0 60%
-      ),
-      radial-gradient(
-        ellipse 50% 15% at 50% 100%,
-          #ffff 0%,
-          #fff0 60%
-        )`}
-        rPadding={10}
-      >
-        <Text rFontSize={20} fontWeight={'lighter'} color="white">
-          BAODOICITY
+      <Box className="w-6/12 flex justify-center items-center gap-4">
+        <Text
+          fontFamily="Oswald"
+          rFontSize={14}
+          rLineHeight={18}
+          textAlign="right"
+          opacity={0.7}
+          className="text-nowrap"
+        >
+          CÂN NẶNG BALO
+        </Text>
+        <PlayerWeightProgress />
+        <Text fontFamily="Oswald" rFontSize={14} rLineHeight={18}>
+          <span className="text-large text-white">{(weight / 1000).toFixed(2)}</span> /{' '}
+          <span className="text-white text-sm text-nowrap text-opacity-70">{leftInventory.maxWeight / 1000} Kg</span>
         </Text>
       </Box>
 
-      <Box className="w-3/12">
+      <Box className="w-full">
         <Line />
       </Box>
-      <Box className="flex items-center gap-2 w-2/12 text-right justify-end">
-        <Text rFontSize={14} rLineHeight={14}>
+      <Box className="flex items-center gap-2 w-3/12 text-right justify-end ">
+        <Text rFontSize={14} rLineHeight={14} fontFamily="Oswald" opacity={0.7}>
           Exit From
           <br /> Inventory
         </Text>
-        <Box className="rounded-md bg-red-600 flex justify-center items-center h-8 w-16 shadow-red-600 shadow-md">
-          <Text fontWeight={'bold'} rFontSize={14} color="#1f1f1f">
+        <Box className="rounded-md bg-white bg-opacity-70 flex justify-center items-center h-8 w-16">
+          <Text rFontSize={14} color="#1f1f1f" fontFamily="Oswald">
             ESC
           </Text>
         </Box>

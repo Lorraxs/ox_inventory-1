@@ -12,10 +12,10 @@ $secondaryColorHighlight: #33343f;
 $secondaryColorLight: rgba(0, 0, 0, 0.5);
 $secondaryColorDark: rgba(12, 12, 12, 0.8);
 
-$gridCols: 5;
-$gridRows: 7;
+$gridCols: 6;
+$gridRows: 6;
 $gridSize: 8.5vh;
-$gridGap: 10px;
+$gridGap: 22px;
 $containerSize: calc(#{$gridRows} * #{$gridSize + 0.22vh} + #{$gridRows} * #{$gridGap});
 
 .inventory-header {
@@ -47,7 +47,8 @@ code {
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  /* width: 5px; */
+  display: none;
 }
 
 ::-webkit-scrollbar-track {
@@ -83,7 +84,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .app-content {
-  /* background-image: url('/assets/images/background.png'); */
+  background-image: url('/assets/images/background.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -158,9 +159,8 @@ button:active {
 .inventory-wrapper {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 60px;
 }
 
 .inventory-control {
@@ -298,7 +298,6 @@ button:active {
 .inventory-grid-wrapper {
   display: flex;
   flex-direction: column;
-  gap: calc($gridGap * 1);
 }
 .filter-wrapper {
   display: flex;
@@ -319,16 +318,20 @@ button:active {
 
 .inventory-grid-container {
   display: grid;
-  height: $containerSize;
-  grid-template-columns: repeat($gridCols, $gridSize);
-  grid-auto-rows: $gridSize + 0.22vh;
+  grid-template-columns: repeat($gridCols, 1fr);
   gap: $gridGap;
   overflow-y: scroll;
+  padding-top: 10px;
+}
+
+.fastslot-grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $gridGap;
 }
 
 // inventory slots
 .inventory-slot {
-  background-color: $secondaryColor;
   background-repeat: no-repeat;
   background-position: center;
   image-rendering: -webkit-optimize-contrast;
@@ -337,11 +340,7 @@ button:active {
   border-color: rgba(0, 0, 0, 0);
   border-style: inset;
   border-width: 1px;
-  background-image: radial-gradient(
-    63.89% 63.89% at 50% 50%,
-    rgba(217, 217, 217, 0.2) 0%,
-    rgba(115, 115, 115, 0.2) 100%
-  );
+  overflow-y: visible;
 }
 
 .inventory-slot-label-box {
@@ -383,11 +382,20 @@ button:active {
   font-family: $mainFont;
 }
 
+.item-rarity {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  transform: translateY(50%);
+  height: 4px;
+}
+
 .item-slot-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  padding: 4px;
   p {
     font-size: 12px;
   }
@@ -413,6 +421,14 @@ button:active {
   p {
     font-size: 12px;
   }
+}
+
+.item-slot-info {
+  position: absolute;
+  top: 0;
+  font-size: 12px;
+  line-height: 12px;
+  transform: translateY(-50%);
 }
 
 .item-slot-currency-wrapper {
@@ -558,8 +574,8 @@ button:active {
 }
 
 .durability-bar {
-  background: #652a00;
-  height: 6px;
+  background: rgba(255, 255, 255, 0.7);
+  height: 2px;
   overflow: hidden;
 }
 
@@ -630,5 +646,12 @@ button:active {
 }
 
 .slot-icon {
-  font-size: 45px;
+  font-size: 30px;
+  line-height: 30px;
+}
+
+.inventory-slot-border {
+  .border-1 {
+    border-top: 2px solid rgba(255, 255, 255, 0.301);
+  }
 }

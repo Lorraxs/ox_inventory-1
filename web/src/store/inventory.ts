@@ -28,7 +28,7 @@ const initialState: State = {
   itemAmount: 0,
   shiftPressed: false,
   isBusy: false,
-  showClothing: false,
+  showClothing: true,
   clothing: {
     id: 'clothing',
     type: InventoryType.CLOTHING,
@@ -49,6 +49,7 @@ const initialState: State = {
     ],
   },
   takeingAsset: false,
+  openedSlot: 0,
 };
 
 export const inventorySlice = createSlice({
@@ -89,6 +90,9 @@ export const inventorySlice = createSlice({
     setTakingAsset: (state, action: PayloadAction<boolean>) => {
       state.takeingAsset = action.payload;
     },
+    setOpenedSlot: (state, action: PayloadAction<number>) => {
+      state.openedSlot = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(isPending, (state) => {
@@ -126,6 +130,7 @@ export const {
   setContainerWeight,
   setShowClothing,
   setTakingAsset,
+  setOpenedSlot,
 } = inventorySlice.actions;
 export const selectLeftInventory = (state: RootState) => state.inventory.leftInventory;
 export const selectRightInventory = (state: RootState) => state.inventory.rightInventory;
@@ -134,5 +139,6 @@ export const selectIsBusy = (state: RootState) => state.inventory.isBusy;
 export const selectShowClothing = (state: RootState) => state.inventory.showClothing;
 export const selectClothing = (state: RootState) => state.inventory.clothing;
 export const selectTakingAsset = (state: RootState) => state.inventory.takeingAsset;
+export const selectOpenedSlot = (state: RootState) => state.inventory.openedSlot;
 
 export default inventorySlice.reducer;
