@@ -15,6 +15,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import { Text } from 'lr-components';
 import Loading from './components/utils/Loading';
+import { Settings } from './store/settings';
 
 debugData([
   {
@@ -112,10 +113,15 @@ const App: React.FC = () => {
     items: typeof Items;
     leftInventory: Inventory;
     imagepath: string;
-  }>('init', ({ locale, items, leftInventory, imagepath }) => {
+    clotheBucket: string;
+    autoTakingClothe: boolean;
+  }>('init', ({ locale, items, leftInventory, imagepath, clotheBucket, autoTakingClothe }) => {
     for (const name in locale) Locale[name] = locale[name];
     for (const name in items) Items[name] = items[name];
-
+    if (clotheBucket) {
+      Settings.clothe_bucket = clotheBucket;
+    }
+    Settings.autoTakingClothe = autoTakingClothe || false;
     setImagePath(imagepath);
     dispatch(setupInventory({ leftInventory }));
   });

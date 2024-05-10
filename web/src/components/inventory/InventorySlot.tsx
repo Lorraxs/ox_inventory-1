@@ -19,6 +19,8 @@ import { useHover } from '@mantine/hooks';
 import classNames from 'classnames';
 import ItemRarity from './ItemRarity';
 import { Box } from 'lr-components';
+import LazyImage from '../utils/LazyImage';
+import { Settings } from '../../store/settings';
 
 interface SlotProps {
   inventoryId: Inventory['id'];
@@ -73,6 +75,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
       }),
       drop: (source) => {
         dispatch(closeTooltip());
+        if (locked) return;
         switch (source.inventory) {
           case InventoryType.SHOP:
             onBuy(source, { inventory: inventoryType, item: { slot: item.slot } });
@@ -90,7 +93,7 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
         inventoryType !== InventoryType.SHOP &&
         inventoryType !== InventoryType.CRAFTING,
     }),
-    [inventoryType, item]
+    [inventoryType, item, locked]
   );
 
   useNuiEvent('refreshSlots', (data: { items?: ItemsPayload | ItemsPayload[] }) => {
@@ -155,6 +158,29 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
     }
   }, [item.name, selectedCategory, Items, searching]);
 
+  const componentData:
+    | {
+        componentId: number;
+        drawableId: number;
+        textureId: number;
+        name: string;
+        gender: 'male' | 'female';
+      }
+    | undefined = useMemo(() => {
+    if (item.name) {
+      //male_component_11_12_0
+      const arg = item.name.split('_');
+      if (arg.length < 5) return;
+      return {
+        gender: arg[0] as 'male' | 'female',
+        componentId: Number(arg[2]),
+        drawableId: Number(arg[3]),
+        textureId: Number(arg[4]),
+        name: item.name,
+      };
+    }
+  }, [item]);
+
   return (
     <Box
       ref={refs}
@@ -179,7 +205,17 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           background: hovered ? 'rgba(254, 137, 49, 0.2)' : '',
         }}
       /> */}
-      {
+      {componentData ? (
+        <div className="absolute w-full h-full flex items-center justify-center">
+          <LazyImage
+            className="w-3/4 h-3/4 absolute"
+            targetType="clothe"
+            bucket={Settings.clothe_bucket}
+            type="component"
+            {...componentData}
+          />
+        </div>
+      ) : (
         <div
           className="absolute w-full h-full"
           style={{
@@ -189,15 +225,45 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
             backgroundPosition: 'center',
           }}
         ></div>
-      }
+      )}
 
+      <div className="absolute top-0 left-0 w-full h-full flex inventory-slot-border">
+        <div
+          className={classNames('w-2/12 border-t border-l border-b border-white rounded-tl-sm rounded-bl-sm', {
+            'border-opacity-30': !hovered,
+          })}
+        ></div>
+        <div
+          className={classNames('w-4/12 border-b border-white relative flex justify-center items-center', {
+            'border-opacity-30': !hovered,
+          })}
+        >
+          <div className="item-slot-info ">
+            {locked ? (
+              <i
+                className={classNames('icon icon-lock', {
+                  'opacity-30': !hovered,
+                })}
+              />
+            ) : (
+              <p>{item.count}</p>
+            )}
+          </div>
+          {isSlotWithItem(item) && <ItemRarity item={item} />}
+        </div>
+        <div
+          className={classNames('w-6/12 border-b border-r border-t border-white rounded-tr-sm rounded-br-sm', {
+            'border-opacity-30': !hovered,
+          })}
+        ></div>
+      </div>
       {isSlotWithItem(item) && shouldRenderItem && (
         <div
           className="item-slot-wrapper relative"
           onMouseEnter={() => {
-            timerRef.current = window.setTimeout(() => {
+            timerRef.current = setTimeout(() => {
+              console.log('tootip ', item);
               dispatch(openTooltip({ item, inventoryType }));
-            }, 500) as unknown as number;
             }, 200);
           }}
           onMouseLeave={() => {
@@ -254,36 +320,6 @@ const InventorySlot: React.ForwardRefRenderFunction<HTMLDivElement, SlotProps> =
           </div>
         </div>
       )}
-      <div className="absolute top-0 left-0 w-full h-full flex inventory-slot-border">
-        <div
-          className={classNames('w-2/12 border-t border-l border-b border-white rounded-tl-sm rounded-bl-sm', {
-            'border-opacity-30': !hovered,
-          })}
-        ></div>
-        <div
-          className={classNames('w-4/12 border-b border-white relative flex justify-center items-center', {
-            'border-opacity-30': !hovered,
-          })}
-        >
-          <div className="item-slot-info ">
-            {locked ? (
-              <i
-                className={classNames('icon icon-lock', {
-                  'opacity-30': !hovered,
-                })}
-              />
-            ) : (
-              <p>{item.count}</p>
-            )}
-          </div>
-          {isSlotWithItem(item) && <ItemRarity item={item} />}
-        </div>
-        <div
-          className={classNames('w-6/12 border-b border-r border-t border-white rounded-tr-sm rounded-br-sm', {
-            'border-opacity-30': !hovered,
-          })}
-        ></div>
-      </div>
     </Box>
   );
 };

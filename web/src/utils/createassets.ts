@@ -1,4 +1,5 @@
 import { store } from '../store';
+import { setTakingAsset } from '../store/inventory';
 import { ICreateAssetPayload } from '../typings';
 import { fetchNui } from './fetchNui';
 import { Sleep } from './misc';
@@ -43,12 +44,22 @@ export class Queue<T extends { resolve?: (value: unknown) => void }> {
   async queueThread() {
     while (true) {
       if (this.isEmpty) {
+        if (this.started) {
+          this.started = false;
+          store.dispatch(setTakingAsset(false));
+          fetchNui('screenshot:stopScreenShot');
+        }
         await Sleep(1000);
       } else {
+        if (!this.started) {
+          this.started = true;
+          store.dispatch(setTakingAsset(true));
+        }
         const { resolve, ...rest } = this.dequeue();
         const response = await this.process({ ...rest });
         console.log('Queue process response', response);
         console.log('end queue thread', this.length, this.isEmpty);
+        await Sleep(500);
         if (resolve) {
           resolve(response);
         }
@@ -58,6 +69,7 @@ export class Queue<T extends { resolve?: (value: unknown) => void }> {
 }
 
 class CreateAssets {
+  processingItems: Map<string, Promise<string>> = new Map();
   queue = new Queue<{ payload: ICreateAssetPayload; resolve: (value: any) => void }>(({ payload }) => {
     console.log('process queue', payload);
     return new Promise((resolve) => {
@@ -76,9 +88,16 @@ class CreateAssets {
   }
 
   add(payload: ICreateAssetPayload): Promise<string> {
-    return new Promise((resolve) => {
-      this.queue.enqueue({ payload, resolve });
-    });
+    const savedPromise = this.processingItems.get(payload.name);
+    if (!savedPromise) {
+      const promise = new Promise<string>((resolve) => {
+        this.queue.enqueue({ payload, resolve });
+      });
+      this.processingItems.set(payload.name, promise);
+      return promise;
+    } else {
+      return savedPromise;
+    }
   }
 }
 

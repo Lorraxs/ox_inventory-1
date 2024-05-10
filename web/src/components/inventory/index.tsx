@@ -3,7 +3,14 @@ import useNuiEvent from '../../hooks/useNuiEvent';
 import InventoryControl from './InventoryControl';
 import InventoryHotbar from './InventoryHotbar';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { refreshSlots, selectShowClothing, setAdditionalMetadata, setupInventory } from '../../store/inventory';
+import {
+  refreshSlots,
+  selectShowClothing,
+  setAdditionalMetadata,
+  setOpenedSlot,
+  setShowClothing,
+  setupInventory,
+} from '../../store/inventory';
 import { useExitListener } from '../../hooks/useExitListener';
 import type { Inventory as InventoryProps } from '../../typings';
 import RightInventory from './RightInventory';
@@ -17,6 +24,7 @@ import Header from '../Header';
 import Footer from '../Footer';
 import Clothing from './Clothing';
 import FastSlots from './FastSlots';
+import { Button } from '@nextui-org/react';
 
 const Inventory: React.FC = () => {
   const [inventoryVisible, setInventoryVisible] = useState(false);
@@ -45,6 +53,9 @@ const Inventory: React.FC = () => {
   useNuiEvent('displayMetadata', (data: Array<{ metadata: string; value: string }>) => {
     dispatch(setAdditionalMetadata(data));
   });
+  useNuiEvent('setOpenedSlot', (slot: number) => {
+    dispatch(setOpenedSlot(slot));
+  });
 
   return (
     <>
@@ -59,10 +70,19 @@ const Inventory: React.FC = () => {
               <LeftInventory />
               {/* <InventoryControl infoVisible={infoVisible} setInfoVisible={setInfoVisible} /> */}
               {!showClothing ? <RightInventory /> : <Clothing />}
-              {/* <Tooltip /> */}
+              <Tooltip />
               <InventoryContext />
             </div>
           </div>
+          <Button
+            className="absolute right-10 bottom-32"
+            color="warning"
+            onClick={() => {
+              dispatch(setShowClothing(!showClothing));
+            }}
+          >
+            {showClothing ? 'KHO ĐỒ PHỤ' : 'QUẦN ÁO'}
+          </Button>
           <Footer infoVisible={infoVisible} setInfoVisible={setInfoVisible} />
         </div>
       </Fade>

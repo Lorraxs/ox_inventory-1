@@ -21,6 +21,7 @@ import classNames from 'classnames';
 import { useHover } from '@mantine/hooks';
 import ItemRarity from './ItemRarity';
 import { Box, Text } from 'lr-components';
+import { Settings } from '../../store/settings';
 
 interface Props {
   slot: IClothingSlot;
@@ -148,7 +149,13 @@ const ClothingSlot: React.FC<Props> = ({ slot, item, inventoryType }, ref) => {
         }}
       ></div> */}
       {componentData && (
-        <LazyImage className="w-full h-full absolute" bucket="items" type="component" {...componentData} />
+        <LazyImage
+          className="w-3/4 h-3/4 absolute"
+          targetType="clothe"
+          bucket={Settings.clothe_bucket}
+          type="component"
+          {...componentData}
+        />
       )}
       {isSlotWithItem(item) && (
         <div

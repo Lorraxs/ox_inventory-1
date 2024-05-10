@@ -133,20 +133,39 @@ end
 
 local ESX = exports['es_extended']:getSharedObject()
 
+local function loadDefaultModel()
+	local model = GetHashKey('mp_m_freemode_01')
+	RequestModel(model)
+	while not HasModelLoaded(model) do
+		Wait(100)
+	end
+	if (IsModelInCdimage(model) and IsModelValid(model)) then
+		SetPlayerModel(PlayerId(), model)
+		SetPedDefaultComponentVariation(playerPed)
+	end
+
+	SetModelAsNoLongerNeeded(model)
+end
+
+
 local function refreshPlayerClothing(updatePed)
 	if not PlayerData.clothing then return end
-	local ped = updatePed or cache.ped
+	loadDefaultModel()
+	local ped = updatePed or PlayerPedId()
 	if not updatePed then
 		local p = promise.new()
 		ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
+			print(json.encode(skin))
 			if skin == nil then
+				p:resolve(nil)
 			else
 				TriggerEvent('skinchanger:loadSkin', skin)
 				Wait(100)
-				p:resolve()
+				p:resolve(skin)
 			end
 		end)
-		Citizen.Await(p)
+		local savedSkin = Citizen.Await(p)
+		if not savedSkin then return end
 	end
 
 	local clothing = PlayerData.clothing
@@ -185,47 +204,46 @@ local function refreshPlayerClothing(updatePed)
 		ClearPedProp(ped, 7)
 	end
 
+	local openedSlot = 0
+
 	for k, v in pairs(clothing) do
 		local itemData = clothes[v.name]
 		if itemData then
 			if itemData.type == 'component' then
 				SetPedComponentVariation(ped, itemData.c, itemData.d, itemData.t, 2)
+				if itemData.openSlot ~= nil then
+					openedSlot += itemData.openSlot
+				end
 			else
 				SetPedPropIndex(ped, itemData.c, itemData.d, itemData.t, true)
 			end
 		end
 	end
-
+	SendNUIMessage({
+		action = 'setOpenedSlot',
+		data = openedSlot
+	})
 	if not updatePed then
 		if frontendPed then
 			refreshPlayerClothing(frontendPed)
 		end
 	end
 end
-
+AddEventHandler("ox_inventory:onPlayerCreated", refreshPlayerClothing)
 exports('refreshPlayerClothing', refreshPlayerClothing)
 
+RegisterNUICallback("screenshot:stopScreenShot", function(body, resultCallback)
+	resultCallback("ok")
+	loadDefaultModel()
+	refreshPlayerClothing()
+end)
+
 RegisterNUICallback("screenshot:takeScreenshot", function(body, resultCallback)
-	client.closeInventory()
-	Wait(1000)
 	TriggerEvent('screenshot:takeScreenshot', body, function(url)
 		resultCallback(url)
 	end)
 end)
 
-RegisterCommand("testscreenshot", function(source, args, rawCommand)
-	TriggerEvent("screenshot:takeScreenshot", {
-		bucket = 'items',
-		type = 'components',
-		componentId = 11,
-		drawableId = 16,
-		textureId = 0,
-		name = 'male_component_11_16_0',
-		gender = 'male'
-	}, function(url)
-		print(url)
-	end)
-end, false)
 
 local function closeTrunk()
 	if currentInventory?.type == 'trunk' then
@@ -1473,7 +1491,9 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 				items = PlayerData.inventory,
 				maxWeight = shared.playerweight,
 			},
-			imagepath = client.imagepath
+			imagepath = client.imagepath,
+			clotheBucket = client.clothe_bucket,
+			autoTakingClothe = client.auto_taking_clothes,
 		}
 	})
 

@@ -3,13 +3,13 @@ import { ICategory, Inventory, InventoryType } from '../../typings';
 import WeightBar from '../utils/WeightBar';
 import InventorySlot from './InventorySlot';
 import { getTotalWeight } from '../../helpers';
-import { useAppSelector } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { useIntersection } from '../../hooks/useIntersection';
 import NIcon from '../utils/NIcon';
 import { Button, Input } from '@nextui-org/react';
 import { Box, Text } from 'lr-components';
 import classNames from 'classnames';
-import { selectOpenedSlot } from '../../store/inventory';
+import { selectItemAmount, selectOpenedSlot, setItemAmount } from '../../store/inventory';
 
 const PAGE_SIZE = 30;
 
@@ -28,51 +28,39 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
   const [selectedCategory, setSelectedCategory] = useState<ICategory>('all');
   const [searching, setSearching] = useState('');
   const openedSlot = useAppSelector(selectOpenedSlot);
+  const itemAmount = useAppSelector(selectItemAmount);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (entry && entry.isIntersecting) {
       setPage((prev) => ++prev);
     }
   }, [entry]);
+
+  const inputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.target.valueAsNumber =
+      isNaN(event.target.valueAsNumber) || event.target.valueAsNumber < 0 ? 0 : Math.floor(event.target.valueAsNumber);
+    dispatch(setItemAmount(event.target.valueAsNumber));
+  };
   return (
     <>
       <Box className="inventory-grid-wrapper gap-4" pointerEvents={isBusy ? 'none' : 'all'}>
-        {/* <div className="flex items-center justify-between gap-4 inventory-header">
-          <div className="flex items-center gap-2">
-            <NIcon />
-            <Text
-              fontFamily="Oswald"
-              className="text-lg uppercase font-normal"
-              color="#FF8932"
-              textShadow="0 0 40px #FF8932"
-            >
+        {!playerInventory && (
+          <div className="flex items-center justify-end gap-4 inventory-header">
+            <Text fontFamily="Oswald" rFontSize={18} opacity={0.8} textTransform="uppercase">
               {inventory.label}
             </Text>
-          </div>
 
-          <div className="flex  items-center gap-2">
-            {inventory.maxWeight && (
-              <Text textWrap="nowrap" fontFamily="Oswald" className="min-w-24 text-right">
-                <span className="text-xs">{(weight / 1000).toFixed(2)}/</span>{' '}
-                <span className="font-normal text-base text-nowrap">{inventory.maxWeight / 1000} Kg</span>
-              </Text>
-            )}
-            {playerInventory && (
-              <Input
-                type="text"
-                label="Tìm kiếm"
-                size="sm"
-                variant="flat"
-                classNames={{
-                  inputWrapper: 'bg-opacity-30 h-22 w-36',
-                }}
-                endContent={<i className="icon icon-search"></i>}
-                value={searching}
-                onChange={(e) => setSearching(e.target.value)}
-              />
-            )}
+            <div className="flex  items-center gap-2">
+              {inventory.maxWeight && (
+                <Text textWrap="nowrap" fontFamily="Oswald" className="min-w-24 text-right">
+                  <span className="text-xs">{(weight / 1000).toFixed(2)}/</span>{' '}
+                  <span className="font-normal text-base text-nowrap">{inventory.maxWeight / 1000} Kg</span>
+                </Text>
+              )}
+            </div>
           </div>
-        </div> */}
+        )}
         {/* <div
           className={classNames('filter-wrapper', 'inventory-header', {
             'opacity-0': !playerInventory,
@@ -134,9 +122,23 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
         </div> */}
         {inventory.type === InventoryType.PLAYER && (
           <>
-            <Text fontFamily="Oswald" rFontSize={18} opacity={0.8}>
-              TÚI QUẦN
-            </Text>
+            <div className="flex gap-4 items-center justify-between w-full">
+              <Text fontFamily="Oswald" rFontSize={18} opacity={0.8} textWrap="nowrap">
+                TÚI QUẦN
+              </Text>
+              <div>
+                <Input
+                  type="number"
+                  size="sm"
+                  variant="flat"
+                  classNames={{
+                    inputWrapper: 'bg-opacity-30 h-22 w-36',
+                  }}
+                  value={String(itemAmount)}
+                  onChange={inputHandler}
+                />
+              </div>
+            </div>
             <div className="">
               <div className="flex gap-[22px] w-full">
                 <InventorySlot
@@ -182,7 +184,12 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
             </Text>
           </>
         )}
-        <Box className="inventory-grid-container pr-2" ref={containerRef} rHeight={580}>
+        <Box
+          className="inventory-grid-container pr-2"
+          ref={containerRef}
+          rHeight={playerInventory ? 580 : 730}
+          rGridTemplateColumns={[6, 88]}
+        >
           <>
             {inventory.items
               .slice(0, (page + 1) * PAGE_SIZE)

@@ -1,4 +1,4 @@
-import { Inventory, SlotWithItem } from '../../typings';
+import { Inventory, RarityColors, RarityLabels, SlotWithItem } from '../../typings';
 import React, { Fragment, useMemo } from 'react';
 import { Items } from '../../store/items';
 import { Locale } from '../../store/locale';
@@ -7,6 +7,8 @@ import { useAppSelector } from '../../store';
 import ClockIcon from '../utils/icons/ClockIcon';
 import { getItemUrl } from '../../helpers';
 import Divider from '../utils/Divider';
+import ItemRarity from './ItemRarity';
+import { Text } from 'lr-components';
 
 const SlotTooltip: React.ForwardRefRenderFunction<
   HTMLDivElement,
@@ -43,6 +45,7 @@ const SlotTooltip: React.ForwardRefRenderFunction<
               <p>{item.metadata?.type}</p>
             )}
           </div>
+
           <Divider />
           {description && (
             <div className="tooltip-description">
@@ -113,6 +116,23 @@ const SlotTooltip: React.ForwardRefRenderFunction<
                   );
                 })}
             </div>
+          )}
+          <Divider />
+          {itemData.rarity && (
+            <>
+              <Text
+                fontFamily="Oswald"
+                rFontSize={12}
+                color={RarityColors[itemData.rarity]}
+                textTransform="uppercase"
+                className="mt-2"
+              >
+                {RarityLabels[itemData.rarity]}
+              </Text>
+              <div className="w-5 relative h-2">
+                <ItemRarity item={item} />
+              </div>
+            </>
           )}
         </div>
       )}

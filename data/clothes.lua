@@ -482,6 +482,8 @@ return {
     c = 5,
     d = 4,
     type = 'component',
+    openSlot = 10,
+    addWeight = 5000
   },
   ['male_prop_1_24_3'] = {
     label = 'prop',

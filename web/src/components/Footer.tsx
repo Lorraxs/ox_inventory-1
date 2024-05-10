@@ -1,13 +1,16 @@
-import { Box, Button, Text } from 'lr-components';
+import { Box, Text } from 'lr-components';
 import React, { Fragment, useMemo } from 'react';
 import Line from './Line';
 import { useAppSelector } from '../store';
 import { getItemUrl } from '../helpers';
-import { SlotWithItem } from '../typings';
+import { DragSource, SlotWithItem } from '../typings';
 import { Items } from '../store/items';
 import ClockIcon from './utils/icons/ClockIcon';
 import ReactMarkdown from 'react-markdown';
 import { Locale } from '../store/locale';
+import { useDrop } from 'react-dnd';
+import { onGive } from '../dnd/onGive';
+import { Button } from '@nextui-org/react';
 
 interface Props {
   infoVisible: boolean;
@@ -27,9 +30,18 @@ function Footer({ infoVisible, setInfoVisible }: Props) {
     if (!hoverData.item?.ingredients) return null;
     return Object.entries(hoverData.item.ingredients).sort((a, b) => a[1] - b[1]);
   }, [hoverData]);
+  const [, give] = useDrop<DragSource, void, any>(() => ({
+    accept: 'SLOT',
+    drop: (source) => {
+      source.inventory === 'player' && onGive(source.item);
+    },
+  }));
   return (
     <div style={{ height: '100%' }}>
-      <div className="flex  h-full items-center justify-center bg-white bg-opacity-5 gap-4">
+      <div
+        className="flex  h-full items-center justify-center bg-white bg-opacity-5 gap-4 hover:bg-lime-500 hover:bg-opacity-30"
+        ref={give}
+      >
         <svg width="47" height="23" viewBox="0 0 47 23" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             fillRule="evenodd"

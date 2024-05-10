@@ -18,28 +18,28 @@ const Clothing: React.FC = () => {
           <ClothingSlot slot={1} item={clothing.items[1]} inventoryType="clothing" />
         </div>
         <div className="flex gap-[22px]">
-          <ClothingSlot slot={13} item={clothing.items[1]} inventoryType="clothing" />
-          <ClothingSlot slot={12} item={clothing.items[1]} inventoryType="clothing" />
-          <ClothingSlot slot={14} item={clothing.items[1]} inventoryType="clothing" />
+          <ClothingSlot slot={13} item={clothing.items[13]} inventoryType="clothing" />
+          <ClothingSlot slot={12} item={clothing.items[12]} inventoryType="clothing" />
+          <ClothingSlot slot={14} item={clothing.items[14]} inventoryType="clothing" />
         </div>
         <div className="flex gap-[22px]">
-          <ClothingSlot slot={11} item={clothing.items[1]} inventoryType="clothing" />
-          <ClothingSlot slot={8} item={clothing.items[1]} inventoryType="clothing" />
-          <ClothingSlot slot={9} item={clothing.items[1]} inventoryType="clothing" />
+          <ClothingSlot slot={11} item={clothing.items[11]} inventoryType="clothing" />
+          <ClothingSlot slot={8} item={clothing.items[8]} inventoryType="clothing" />
+          <ClothingSlot slot={9} item={clothing.items[9]} inventoryType="clothing" />
         </div>
         <div className="flex gap-[22px]">
-          <ClothingSlot slot={7} item={clothing.items[1]} inventoryType="clothing" />
+          <ClothingSlot slot={7} item={clothing.items[7]} inventoryType="clothing" />
           {/* <ClothingSlot slot={1} item={clothing.items[1]} inventoryType="clothing" />
           <ClothingSlot slot={1} item={clothing.items[1]} inventoryType="clothing" /> */}
-          <ClothingSlot slot={3} item={clothing.items[1]} inventoryType="clothing" />
+          <ClothingSlot slot={3} item={clothing.items[3]} inventoryType="clothing" />
         </div>
         <div className="flex gap-[22px]">
-          <ClothingSlot slot={18} item={clothing.items[1]} inventoryType="clothing" />
-          <ClothingSlot slot={4} item={clothing.items[1]} inventoryType="clothing" />
+          <ClothingSlot slot={18} item={clothing.items[18]} inventoryType="clothing" />
+          <ClothingSlot slot={4} item={clothing.items[4]} inventoryType="clothing" />
         </div>
         <div className="flex gap-[22px]">
-          <ClothingSlot slot={5} item={clothing.items[1]} inventoryType="clothing" />
-          <ClothingSlot slot={6} item={clothing.items[1]} inventoryType="clothing" />
+          <ClothingSlot slot={5} item={clothing.items[5]} inventoryType="clothing" />
+          <ClothingSlot slot={6} item={clothing.items[6]} inventoryType="clothing" />
           {/* <ClothingSlot slot={1} item={clothing.items[1]} inventoryType="clothing" /> */}
         </div>
       </Box>

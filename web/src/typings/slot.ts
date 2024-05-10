@@ -13,6 +13,17 @@ export const RarityColors: { [key in Rarity]: string } = {
   unique: 'rgb(228, 53, 51)',
 };
 
+export const RarityLabels: { [key in Rarity]: string } = {
+  common: 'Phổ biến',
+  uncommon: 'Không phổ biến',
+  rare: 'Hiếm',
+  epic: 'Sử thi',
+  legendary: 'Huyền thoại',
+  mythical: 'Thần thoại',
+  godlike: 'Thần thánh',
+  unique: 'Độc nhất',
+};
+
 export type Slot = {
   slot: number;
   name?: string;

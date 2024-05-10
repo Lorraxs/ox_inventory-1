@@ -1724,6 +1724,7 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
 		if data.toType == "clothing" then 
 			local itemData = clothes[fromData.name]
 			print(json.encode(itemData))
+			print(data.toSlot,itemData.c )
 			if not itemData then return end
 			if itemData.type =='component' then
 				if data.toSlot ~= itemData.c then return end

@@ -318,7 +318,7 @@ button:active {
 
 .inventory-grid-container {
   display: grid;
-  grid-template-columns: repeat($gridCols, 1fr);
+  /* grid-template-columns: repeat($gridCols, 1fr); */
   gap: $gridGap;
   overflow-y: scroll;
   padding-top: 10px;

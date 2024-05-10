@@ -121,20 +121,23 @@ export interface IVehicleProperties {
 }
 
 export interface ICreateAssetVehicle {
-  bucket: 'vehicles';
+  targetType: 'vehicle';
+  bucket: string;
   name: string;
   props?: IVehicleProperties;
 }
 
 export interface ICreateAssetOwnedVehicle {
-  bucket: 'owned_vehicles';
+  targetType: 'owned_vehicles';
+  bucket: string;
   name: string;
   vehicleName: string;
-  props?: IVehicleProperties;
+  props: IVehicleProperties;
 }
 
 export interface ICreateAssetClothe {
-  bucket: 'items';
+  targetType: 'clothe';
+  bucket: string;
   type: 'component' | 'props';
   componentId: number;
   drawableId: number;

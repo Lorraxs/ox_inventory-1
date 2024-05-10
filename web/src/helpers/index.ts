@@ -4,6 +4,7 @@ import { store } from '../store';
 import { Items } from '../store/items';
 import { imagepath } from '../store/imagepath';
 import { fetchNui } from '../utils/fetchNui';
+import { Settings } from '../store/settings';
 
 export const canPurchaseItem = (item: Slot, inventory: { type: Inventory['type']; groups: Inventory['groups'] }) => {
   if (inventory.type !== 'shop' || !isSlotWithItem(item)) return true;
@@ -158,6 +159,12 @@ export const getItemUrl = (item: string | SlotWithItem) => {
   }
 
   const itemName = isObj ? (item.name as string) : item;
+  if (itemName) {
+    //male_component_11_12_0
+    const arg = itemName.split('_');
+    if (arg.length < 5) return;
+    return `https://supabase.lorraxs.dev/storage/v1/object/public/${Settings.clothe_bucket}/${itemName}.png`;
+  }
   const itemData = Items[itemName];
 
   if (!itemData) return `${imagepath}/${itemName}.png`;
