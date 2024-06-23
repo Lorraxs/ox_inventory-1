@@ -139,7 +139,7 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
                 />
               </div>
             </div>
-            <div className="">
+            <div className="flex flex-col gap-[22px]">
               <div className="flex gap-[22px] w-full">
                 <InventorySlot
                   item={inventory.items[5]}
@@ -178,6 +178,120 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
                   inventoryId={inventory.id}
                 />
               </div>
+              <div className="flex gap-[22px] w-full">
+                <InventorySlot
+                  item={inventory.items[11]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[12]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[13]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[14]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[15]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[16]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+              </div>
+              <div className="flex gap-[22px] w-full">
+                <InventorySlot
+                  item={inventory.items[17]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[18]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[19]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[20]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[21]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[22]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+              </div>
+              <div className="flex gap-[22px] w-full">
+                <InventorySlot
+                  item={inventory.items[23]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[24]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[25]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[26]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[27]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+                <InventorySlot
+                  item={inventory.items[28]}
+                  inventoryType={inventory.type}
+                  inventoryGroups={inventory.groups}
+                  inventoryId={inventory.id}
+                />
+              </div>
             </div>
             <Text fontFamily="Oswald" rFontSize={18} opacity={0.8}>
               BA LÔ
@@ -187,7 +301,7 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
         <Box
           className="inventory-grid-container pr-2"
           ref={containerRef}
-          rHeight={playerInventory ? 580 : 730}
+          rHeight={playerInventory ? 220 : 730}
           rGridTemplateColumns={[6, 88]}
         >
           <>
@@ -195,7 +309,7 @@ const InventoryGrid: React.FC<{ inventory: Inventory; playerInventory?: boolean 
               .slice(0, (page + 1) * PAGE_SIZE)
               .map(
                 (item, index) =>
-                  (inventory.type !== InventoryType.PLAYER || item.slot > 11) && (
+                  (inventory.type !== InventoryType.PLAYER || item.slot > 29) && (
                     <InventorySlot
                       searching={searching}
                       selectedCategory={selectedCategory}

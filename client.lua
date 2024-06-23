@@ -147,9 +147,11 @@ local function loadDefaultModel()
 	SetModelAsNoLongerNeeded(model)
 end
 
+local refreshingClothing = false
 
 local function refreshPlayerClothing(updatePed)
 	if not PlayerData.clothing then return end
+	refreshingClothing = true
 	loadDefaultModel()
 	local ped = updatePed or PlayerPedId()
 	if not updatePed then
@@ -228,6 +230,7 @@ local function refreshPlayerClothing(updatePed)
 			refreshPlayerClothing(frontendPed)
 		end
 	end
+	refreshingClothing = false
 end
 AddEventHandler("ox_inventory:onPlayerCreated", refreshPlayerClothing)
 exports('refreshPlayerClothing', refreshPlayerClothing)
@@ -1517,7 +1520,9 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 			end
 		elseif invOpen == true then
 			if not canOpenInventory() then
-				client.closeInventory()
+				if not refreshingClothing then
+					client.closeInventory()
+				end
 			else
 				playerCoords = GetEntityCoords(playerPed)
 
